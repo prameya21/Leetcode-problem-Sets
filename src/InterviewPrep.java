@@ -29,6 +29,8 @@ public class InterviewPrep {
             System.out.println("Pass");
         else
             System.out.println("Fail");
+
+        System.out.println(ap.stringCompress("aabbccdddde"));
 	}
 
 }

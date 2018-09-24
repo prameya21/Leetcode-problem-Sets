@@ -110,4 +110,34 @@ public class ArrayPrep
         }
         return count==1;
     }
+    public String stringCompress(String str)
+    {
+        StringBuilder sb=new StringBuilder();
+        int countConsqeutive=0;
+        for(int i=0;i<str.length();i++)
+        {
+            countConsqeutive++;
+            if(i+1>=str.length() || str.charAt(i)!=str.charAt(i+1))
+            {
+                sb.append(str.charAt(i));
+                sb.append(countConsqeutive);
+                countConsqeutive=0;
+            }
+        }
+        return sb.length()>str.length()?str:sb.toString();
+    }
+
+    public void rotate(int mat[][])
+    {
+        if(mat.length==0 || mat.length!=mat[0].length)
+            return;
+        int l=mat.lerngth;
+        for(int i=0;i<l/2;i++)
+        {
+            int first=i;
+            int last=l-1-i;
+            
+        }
+    }
+
 }
