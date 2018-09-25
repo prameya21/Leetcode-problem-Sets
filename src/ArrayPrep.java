@@ -131,13 +131,65 @@ public class ArrayPrep
     {
         if(mat.length==0 || mat.length!=mat[0].length)
             return;
-        int l=mat.lerngth;
-        for(int i=0;i<l/2;i++)
+        int length=mat.length;
+        for(int i=0;i<length/2;i++)
         {
             int first=i;
-            int last=l-1-i;
-            
+            int last=length-i-1;
+            for(int j=first;j<last;j++)
+            {
+                int offset=j-first;
+                int temp=mat[first][j];
+                mat[first][j]=mat[last-offset][first];
+                mat[last-offset][first]=mat[last][last-offset];
+                mat[last][last-offset]=mat[j][last];
+                mat[j][last]=temp;
+            }
         }
+    }
+    public void makeZero(int mat[][])
+    {
+        boolean rowHasZero=false;
+        boolean columnHasZero=false;
+        for(int i=0;i<mat.length;i++)
+            if(mat[i][0]==0)
+                rowHasZero=true;
+        for(int i=0;i<mat[0].length;i++)
+            if(mat[0][i]==0)
+                columnHasZero=true;
+        for(int i=0;i<mat.length;i++)
+        {
+            for(int j=0;j<mat[0].length;j++)
+            {
+                if(mat[i][j]==0)
+                {
+                    mat[i][0]=0;
+                    mat[0][j]=0;
+                }
+            }
+        }
+        for(int i=0;i<mat.length;i++)
+        {
+            if(mat[i][0]==0)
+            {
+                for(int j=0;j<mat[0].length;j++)
+                    mat[i][j]=0;
+            }
+        }
+        for(int i=0;i<mat[0].length;i++)
+        {
+            if(mat[0][i]==0)
+            {
+                for(int j=0;j<mat.length;j++)
+                    mat[j][i]=0;
+            }
+        }
+        if(rowHasZero)
+            for(int i=0;i<mat.length;i++)
+                mat[i][0]=0;
+        if(columnHasZero)
+            for(int i=0;i<mat[0].length;i++)
+                mat[0][i]=0;
     }
 
 }

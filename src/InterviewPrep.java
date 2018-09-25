@@ -31,6 +31,35 @@ public class InterviewPrep {
             System.out.println("Fail");
 
         System.out.println(ap.stringCompress("aabbccdddde"));
+        int mat[][]={{1,1,1},{2,2,2},{3,3,3}};
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+                System.out.print(mat[i][j]);
+            System.out.println();
+        }
+        ap.rotate(mat);
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+                System.out.print(mat[i][j]);
+            System.out.println();
+        }
+        int mat1[][]={{1,1,1},{1,0,1},{1,1,1}};
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+                System.out.print(mat1[i][j]);
+            System.out.println();
+        }
+        ap.makeZero(mat1);
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+                System.out.print(mat1[i][j]);
+            System.out.println();
+        }
+
 	}
 
 }
