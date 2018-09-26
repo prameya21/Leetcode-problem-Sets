@@ -3,6 +3,12 @@ public class InterviewPrep {
 
 	public static void main(String[] args)
 	{
+
+	    //Arrays and String calls
+        //
+        //
+        //
+        //
 		//System.out.println("Hello World");
 		String str = "abcba";
 		ArrayPrep ap = new ArrayPrep();
@@ -60,6 +66,14 @@ public class InterviewPrep {
             System.out.println();
         }
 
+
+        //Linked List problems
+        ListNode head=new ListNode(1);
+        head.add(2);
+        head.add(3);
+        head.add(3);
+        System.out.println("Count= "+head.count(3));
+        System.out.println("nth= "+head.getNth(1));
 	}
 
 }
