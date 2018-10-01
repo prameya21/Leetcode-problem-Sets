@@ -1,6 +1,42 @@
 
-public class InterviewPrep {
+public class InterviewPrep
+{
+    /*public static int kthlast(ListNode head,int k)
+    {
+        if(head==null)
+            return 0;
+        int index=kthlast(head.next,k)+1;
+        if(index==k)
+        {
+            System.out.println("kth last element is :"+head.data);
+        }
+        return index;
 
+    }
+    */
+    public static ListNode rearrange(ListNode hd, int data)
+    {
+        ListNode head=hd;
+        ListNode tail=hd;
+        ListNode current=hd;
+        while(current!=null)
+        {
+            ListNode next=current.next;
+            if(current.data<data)
+            {
+                current.next=head;
+                head=current;
+            }
+            else
+            {
+                tail.next=current;
+                tail=current;
+            }
+            current=next;
+        }
+        tail.next=null;
+        return head;
+    }
 	public static void main(String[] args)
 	{
 
@@ -72,8 +108,21 @@ public class InterviewPrep {
         head.add(2);
         head.add(3);
         head.add(3);
+        head.add(4);
+        head.add(5);
+        head.add(5);
         System.out.println("Count= "+head.count(3));
-        System.out.println("nth= "+head.getNth(1));
+        //System.out.println("nth= "+head.getNth(1));
+        //System.out.println("head= "+head.pop());
+        //head.insetNth(20,0);
+        head.insetNth(12,2);
+        //head.removeDupsHash();
+        //head.remopvedups();
+        //head.printList();
+        //System.out.println("kthlast="+head.kthlast(3));
+        //int data=kthlast(head,3);
+        ListNode temp=rearrange(head,12);
+        temp.printList();
 	}
 
 }
