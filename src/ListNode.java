@@ -1,4 +1,5 @@
 import java.util.HashSet;
+import java.util.Stack;
 
 public class ListNode
 {
@@ -145,6 +146,32 @@ public class ListNode
         }
         return runner.data;
     }
+    public boolean isPalindrome()
+    {
+        Stack<Integer> st=new Stack<>();
+        ListNode slow=this;
+        ListNode fast=this;
+        while(fast!=null && fast.next!=null)
+        {
+            st.push(slow.data);
+            slow=slow.next;
+            fast=fast.next.next;
+        }
+        if(fast!=null)
+            slow=slow.next;
+        while(slow!=null)
+        {
+            int x=st.pop();
+            if(x!=slow.data)
+                return false;
+            slow=slow.next;
+        }
+        if(!st.isEmpty())
+            return false;
+        return true;
+    }
+
+
 
 
     public void printList()
