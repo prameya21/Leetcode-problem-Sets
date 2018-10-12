@@ -170,6 +170,21 @@ public class StackPrep
             S.push(t);
         }
     }
+    public static void iterativeSort(Stack<Integer> s)
+    {
+        Stack<Integer> r=new Stack<Integer>();
+        while(!s.isEmpty())
+        {
+            int tmp=s.pop().intValue();
+            while(!r.isEmpty() && r.peek() > tmp)
+            {
+                s.push(r.pop());
+            }
+            r.push(tmp);
+        }
+        while(!r.isEmpty())
+            s.push(r.pop());
+    }
     public static void main(String args[])
     {
         //System.out.println("Hello world");
@@ -203,7 +218,8 @@ public class StackPrep
         testStack.push(10);
         testStack.push(20);
         testStack.push(-8);
-        sort(testStack);
+        //sort(testStack);
+        iterativeSort(testStack);
         while(!testStack.isEmpty())
             System.out.println(testStack.pop());
 
