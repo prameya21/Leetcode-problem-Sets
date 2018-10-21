@@ -176,7 +176,7 @@ public class StackPrep
         while(!s.isEmpty())
         {
             int tmp=s.pop().intValue();
-            while(!r.isEmpty() && r.peek() > tmp)
+            while(!r.isEmpty() && r.peek() < tmp)
             {
                 s.push(r.pop());
             }
