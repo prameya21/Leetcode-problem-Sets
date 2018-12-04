@@ -1,4 +1,6 @@
+import java.util.HashSet;
 import java.util.List;
+import java.util.*;
 class Result
 {
     public ListNode node=null;
@@ -149,19 +151,155 @@ public class InterviewPrep
         }
         return prevNode;
     }
+    public static int lengthSubstring(String s)
+    {
+        int n=s.length();
+        int i=0,j=0;
+        int ans=0;
+        Set<Character> set=new HashSet<Character>();
+        while(i<n && j<n)
+        {
+            if(!set.contains(s.charAt(j)))
+            {
+                set.add(s.charAt(j));
+                j++;
+                ans=Math.max(ans,j-i);
+            }
+            else
+            {
+                set.remove(s.charAt(i));
+                i++;
+            }
+        }
+        return ans;
+    }
+    public static int longestCommonSubstring(String str)
+    {
+        int start=0,maxlength=0;
+        int n=str.length();
+        int[][] table=new int[n][n];
+        maxlength=1;
+        for(int i=0;i<n;i++)
+        {
+            table[i][i]=1;
+        }
+        for(int i=0;i<n-1;i++)
+        {
+            if(str.charAt(i)==str.charAt(i+1))
+            {
+                table[i][i+1]=1;
+                start=i;
+                maxlength=2;
+            }
+        }
+        for(int k=3;k<n;k++)
+        {
+            for(int i=0;i<n-k+1;i++)
+            {
+                int j=i+k-1;
+                if(table[i+1][j-1]==1 && str.charAt(i)==str.charAt(j))
+                {
+                    table[i][j]=1;
+                    if(k>maxlength)
+                    {
+                        maxlength=k;
+                        start=i;
+                    }
+                }
+            }
+        }
+        printSubstring(start,maxlength,str);
+        return maxlength;
+    }
+    public static void printSubstring(int start,int maxlength,String str)
+    {
+        String s=str.substring(start,start+maxlength);
+        System.out.print(s);
+    }
 
+    public static String longestPalindromicSubstring(String str)
+    {
+        int start=0,end=0;
+        int len1,len2,len;
+        int n=str.length();
+        for(int i=0;i<n;i++)
+        {
+            len1=expand(str,i,i);
+            len2=expand(str,i,i+1);
+            len=Math.max(len1,len2);
+            if(len>end-start)
+            {
+                start=i-(len-1)/2;
+                end=i+len/2;
+            }
+        }
+        return str.substring(start,end+1);
+
+    }
+    public static int expand(String str,int start,int end)
+    {
+        int L=start,R=end;
+        while(L>0&&R<str.length()&&str.charAt(L)==str.charAt(R))
+        {
+            L--;
+            R++;
+        }
+        return R-L-1;
+    }
+    public static int reverseInt(int i)
+    {
+        int rev=0;
+        while(i!=0)
+        {
+            int j=i%10;
+            rev=rev*10+j;
+            i=i/10;
+        }
+        return rev;
+    }
+    public static int Intreverse(int x)
+    {
+        boolean isPositive = x >= 0;
+        char[] chars = (x + "").substring(isPositive ? 0 : 1).toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for(char c : chars)
+        {
+            sb.append(c);
+        }
+        long res = isPositive ? Long.valueOf(sb.reverse().toString()) : - Long.valueOf(sb.reverse().toString());
+        return  res > Integer.MAX_VALUE || res < Integer.MIN_VALUE ? 0 : (int) res;
+    }
+    public static boolean palindromereverse(int x)
+    {
+        int rev=0;
+        while(x>=rev)
+        {
+            int j=x%10;
+            rev=rev*10+j;
+            x=x/10;
+        }
+        if(rev==x || rev/10==x)
+            return true;
+        else
+            return false;
+    }
+    public static boolean isPalindrome(int x)
+    {
+        if(x < 0) return false;
+        String s = x + "";
+        char[] c = s.toCharArray();
+        int len = c.length;
+        for(int i = 0; i < len / 2; i++)
+        {
+            if(c[i] != c[len - i - 1]) return false;
+        }
+        return true;
+    }
 
 
 	public static void main(String[] args)
 	{
-
-	    //Arrays and String calls
-        //
-        //
-        //
-        //
-		//System.out.println("Hello World");
-		String str = "abcba";
+	    String str = "abcba";
 		ArrayPrep ap = new ArrayPrep();
         boolean unique = ap.checkUnique(str);
         if(unique)
@@ -281,7 +419,23 @@ public class InterviewPrep
             System.out.println("Fail");
         else
             System.out.println("Pass");
-
+        System.out.println("Highest length substring is:  "+lengthSubstring("pkewewkp"));
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println("maxlength is "+longestCommonSubstring("abacdgfdcaba"));
+        System.out.println();
+        System.out.println();
+        System.out.println(longestPalindromicSubstring("abacdgfdcaba"));
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println(reverseInt(-123));
+        System.out.println(Intreverse(-123));
+        if(palindromereverse(121))
+            System.out.println("TRUE");
+        else
+            System.out.println("FALSE");
 	}
 
 }

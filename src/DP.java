@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class DP
 {
@@ -106,6 +107,87 @@ public class DP
         dfsUtil(map,visited,row,col-1);
         dfsUtil(map,visited,row,col+1);
     }
+    public static ArrayList<String> permute(String str)
+    {
+        HashMap<Character,Integer> map=buildFreq(str);
+        ArrayList<String> result=new ArrayList<>();
+        printPerm(map,"",str.length(),result);
+        return result;
+    }
+    public static HashMap<Character,Integer> buildFreq(String str)
+    {
+        HashMap<Character,Integer> map=new HashMap<>();
+        for(char c:str.toCharArray())
+        {
+            if(map.containsKey(c))
+                map.put(c,map.get(c)+1);
+            else
+                map.put(c,1);
+        }
+        return map;
+    }
+    public static void printPerm(HashMap<Character,Integer> map,String prefix,int remaining,ArrayList<String> result)
+    {
+        if(remaining==0)
+        {
+            result.add(prefix);
+            return;
+        }
+
+
+        for(char c:map.keySet())
+        {
+            int count=map.get(c);
+            if(count>0)
+            {
+                map.put(c, count - 1);
+                printPerm(map, prefix + c, remaining - 1, result);
+                map.put(c, count);
+            }
+        }
+    }
+    public static void permute2(String str)
+    {
+        char[] c=str.toCharArray();
+        int len=c.length;
+        for(int i=0;i<(1<<len);i++)
+        {
+            System.out.print("{");
+            for(int j=0;j<len;j++)
+            {
+                if((i & (1<<j))>0)
+                {
+                    System.out.print(c[j]+" ");
+                }
+            }
+            System.out.print("}");
+        }
+
+    }
+    public static int minProd(int a,int b)
+    {
+        int smaller=a>b?b:a;
+        int bigger=a>b?a:b;
+        int[] memo=new int[smaller+1];
+        return minProdHelper(smaller,bigger,memo);
+    }
+    public static int minProdHelper(int smaller,int bigger,int[] memo)
+    {
+        if(smaller==0)
+            return 0;
+        if(smaller==1)
+            return bigger;
+        if(memo[smaller]>0)
+            return memo[smaller];
+        int s=smaller>>1;
+        int halfprod=minProdHelper(s,bigger,memo);
+        if(smaller%2==0)
+            memo[smaller]=halfprod+halfprod;
+        else
+            memo[smaller]=halfprod+halfprod+bigger;
+        return memo[smaller];
+    }
+
     public static void main(String args[])
     {
         System.out.println(countWays(10));
@@ -132,10 +214,11 @@ public class DP
         System.out.println("The island count is"+countIslands(island,v));
         int arr3[]={-10,-5,2,2,2,3,4,7,9,12,13};
         System.out.println("Magic Index= "+magicIndexDup(arr3,0,arr3.length-1));
-
-
-
-
-
+        ArrayList<String> result=permute("abcd");
+        System.out.println(result);
+        permute2("abca");
+        System.out.println();
+        System.out.println(1<<3);
+        System.out.println("Product is "+ minProd(9,5));
     }
 }
