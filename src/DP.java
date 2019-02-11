@@ -133,8 +133,6 @@ public class DP
             result.add(prefix);
             return;
         }
-
-
         for(char c:map.keySet())
         {
             int count=map.get(c);
@@ -209,8 +207,8 @@ public class DP
         //System.out.println(path);
         int arr1[]={-10,-9,-8,-7,4,8,9,10};
         System.out.println("Magic Index= "+magicIndex(arr1,0,arr1.length-1));
-        int[][] island={{1,1,0,0},{1,0,0,0},{0,0,0,0},{1,1,0,1}};
-        int[][] v={{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
+        int[][] island={{1,1,1,1,0},{1,1,0,1,0},{1,1,0,0,0},{0,0,0,0,0}};
+        int[][] v={{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}};
         System.out.println("The island count is"+countIslands(island,v));
         int arr3[]={-10,-5,2,2,2,3,4,7,9,12,13};
         System.out.println("Magic Index= "+magicIndexDup(arr3,0,arr3.length-1));

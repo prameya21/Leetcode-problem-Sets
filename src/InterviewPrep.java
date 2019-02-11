@@ -295,7 +295,165 @@ public class InterviewPrep
         }
         return true;
     }
+    public static int maxContainer(int[] heights)
+    {
+        int maxArea=0;
+        int l=0,r=heights.length-1;
+        while(l<r)
+        {
+            maxArea=Math.max(maxArea,(Math.min(heights[l],heights[r])*r-l));
+            if(heights[l]>heights[r])
+                r--;
+            else
+                l++;
+        }
+        return maxArea;
+    }
 
+    public static String intToRoman(int num)
+    {
+        String[] str={"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+        int[] vals={1000,900,500,400,100,90,50,40,10,9,5,4,1};
+        StringBuilder sb=new StringBuilder();
+        for(int i=0;i<vals.length;i++)
+        {
+            while(num>=vals[i])
+            {
+                num-=vals[i];
+                sb.append(str[i]);
+            }
+        }
+        return sb.toString();
+    }
+    public static int romanToInt(String str)
+    {
+        char[] c=str.toCharArray();
+        int num=0;
+        for(int i=0;i<c.length;i++)
+        {
+            if(c[i]=='I')
+            {
+                if(i<c.length-1 && c[i+1]=='V')
+                {
+                    num+=4;
+                    i++;
+                    continue;
+                }
+                else if(i<c.length-1 && c[i+1]=='X')
+                {
+                    num+=9;
+                    i++;
+                    continue;
+                }
+                else
+                {
+                    num+=1;
+                }
+            }
+            else if(c[i]=='X')
+            {
+                if(i<c.length-1 && c[i+1]=='L')
+                {
+                    num+=40;
+                    i++;
+                    continue;
+                }
+                else if(i<c.length-1 && c[i+1]=='C')
+                {
+                    num+=90;
+                    i++;
+                    continue;
+                }
+                else
+                    num+=10;
+            }
+            else if(c[i]=='C')
+            {
+                if(i<c.length-1 && c[i+1]=='D')
+                {
+                    num+=400;
+                    i++;
+                    continue;
+                }
+                else if(i<c.length-1 && c[i+1]=='M')
+                {
+                    num+=900;
+                    i++;
+                    continue;
+                }
+                else
+                    num+=100;
+            }
+            else if(c[i]=='V')
+                num+=5;
+            else if(c[i]=='L')
+                num+=50;
+            else if(c[i]=='D')
+                num+=500;
+            else if(c[i]=='M')
+                num+=1000;
+            else
+            {
+                System.out.println("Incorrect character");
+                return -1;
+            }
+        }
+        return num;
+    }
+    public static String longestCommonPrefix(String[] strs)
+    {
+        if(strs==null || strs.length==0)
+            return "";
+        return longestCommonPrefix(strs,0,strs.length-1);
+    }
+    public static String longestCommonPrefix(String[] strs, int start, int end)
+    {
+        if(start==end)
+            return strs[start];
+        int mid=(start+end)/2;
+        String lcpleft=longestCommonPrefix(strs,start,mid);
+        String lcpright=longestCommonPrefix(strs,mid+1,end);
+        return commonPrefix(lcpleft,lcpright);
+    }
+    public static String commonPrefix(String left, String right)
+    {
+        int min=Math.min(left.length(),right.length());
+        for(int i=0;i<min;i++)
+        {
+            if(left.charAt(i)!=right.charAt(i))
+                return left.substring(0,i);
+        }
+        return left.substring(0,min);
+    }
+    public static List<List<Integer>> threeSum(int[] nums)
+    {
+        if(nums.length<3)
+            return null;
+        Set<List<Integer>> res=new HashSet<>();
+        Arrays.sort(nums);
+
+        for(int start=0;start<nums.length-2;start++)
+        {
+            int k=start+1;
+            int end=nums.length-1;
+            while(k<end)
+            {
+                if(nums[start]+nums[k]+nums[end]==0)
+                {
+                    res.add(Arrays.asList(nums[start], nums[k], nums[end]));
+                    k++;
+                    end--;
+                }
+                else if(nums[start]+nums[k]+nums[end]>0)
+                {
+                    end--;
+                }
+                else
+                    k++;
+            }
+        }
+        return new ArrayList<>(res);
+    }
 
 	public static void main(String[] args)
 	{
@@ -436,6 +594,17 @@ public class InterviewPrep
             System.out.println("TRUE");
         else
             System.out.println("FALSE");
+        int heights[]={1,8,6,2,5,4,8,3,7};
+        System.out.println("Max Area is :"+maxContainer(heights));
+        System.out.println(intToRoman(69));
+        System.out.print(romanToInt("MCMXCIV"));
+        String[] strs={"fininsh","finger","finder"};
+        System.out.println();
+        System.out.println("LCP is : "+longestCommonPrefix(strs));
+        System.out.println();
+        System.out.println();
+        int[] nums={-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6};
+        System.out.println("Three Sum sol is : "+threeSum(nums));
 	}
 
 }

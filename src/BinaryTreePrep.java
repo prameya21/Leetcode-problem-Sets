@@ -1,5 +1,3 @@
-import javax.jnlp.IntegrationService;
-import java.lang.reflect.Array;
 import java.util.*;
 
 class Node
@@ -14,6 +12,7 @@ class Node
 }
 public class BinaryTreePrep
 {
+
     public static int maxDepth(Node root)
     {
         if(root==null)
@@ -104,23 +103,31 @@ public class BinaryTreePrep
     }
     public static void pathPrinter(Node root)
     {
-        ArrayList<Integer> path=new ArrayList<Integer>();
-        printPaths(root,path);
+        int path[]=new int[10000];
+        printPaths(root,path,0);
 
     }
-    public static void printPaths(Node root, ArrayList<Integer> path)
+    public static void printPaths(Node root, int[] path, int pathlen)
     {
         if(root==null)
             return;
-        path.add(root.data);
+        path[pathlen]=root.data;
+        pathlen++;
         if(root.left==null && root.right==null)
         {
-            System.out.println(path);
-            path.remove(path.size()-1);
+            printPath(path,pathlen);
         }
-        printPaths(root.left,path);
-        printPaths(root.right,path);
+        printPaths(root.left,path,pathlen);
+        printPaths(root.right,path,pathlen);
 
+    }
+    public static void printPath(int[] path,int pathlen)
+    {
+        for(int i=0;i<pathlen;i++)
+        {
+            System.out.print(path[i]+" ,");
+        }
+        System.out.println();
     }
     public static void swap(Node root)
     {
@@ -322,6 +329,7 @@ public class BinaryTreePrep
             System.out.println();
         }
     }
+
     public static void main(String[] args)
     {
         Node root=new Node(5);
@@ -370,5 +378,6 @@ public class BinaryTreePrep
         lateralview(root);
         System.out.println("Level order reversal");
         levelOrderReverse(root);
+
     }
 }

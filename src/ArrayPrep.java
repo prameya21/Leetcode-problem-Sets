@@ -1,10 +1,10 @@
-
+import java.util.*;
 public class ArrayPrep
 {
     public boolean checkUnique(String str)
     {
         if(str.length()>128)
-            return true;
+            return false;
         boolean[] unique=new boolean [128];
         for(int i=0;i<str.length();i++)
         {
@@ -191,5 +191,92 @@ public class ArrayPrep
             for(int i=0;i<mat[0].length;i++)
                 mat[0][i]=0;
     }
+    public static void setZeroes(int[][] matrix)
+    {
+        boolean isRowZero=false,isColumnZero=false;
+        for(int i=0;i<matrix.length;i++)
+            if(matrix[i][0]==0)
+                isRowZero=true;
 
+        for(int i=0;i<matrix[0].length;i++)
+            if(matrix[0][i]==0)
+                isColumnZero=true;
+
+        for(int i=0;i<matrix.length;i++)
+        {
+            for(int j=0;j<matrix[0].length;j++)
+            {
+                if(matrix[i][j]==0)
+                {
+                    matrix[i][0]=0;
+                    matrix[0][j]=0;
+                }
+            }
+        }
+        for(int i=0;i<matrix.length;i++)
+        {
+            if(matrix[i][0]==0)
+            {
+                for(int j=0;j<matrix[0].length;j++)
+                    matrix[i][j]=0;
+            }
+        }
+
+        for(int i=0;i<matrix[0].length;i++)
+        {
+            if(matrix[0][i]==0)
+            {
+                for(int j=0;j<matrix.length;j++)
+                    matrix[j][i]=0;
+            }
+        }
+
+        if(isRowZero)
+            for(int i=0;i<matrix.length;i++)
+                matrix[i][0]=0;
+
+        if(isColumnZero)
+            for(int i=0;i<matrix[0].length;i++)
+                matrix[0][i]=0;
+
+    }
+    public static boolean searchMatrix(int[][] mat, int t)
+    {
+        if(mat.length==0 || mat[0].length==0)
+            return false;
+        int m=mat.length,n=mat[0].length;
+        int l=0,r=(m*n)-1;
+        while(l!=r)
+        {
+            int mid=(l+r)/2;
+            if(mat[mid/n][mid%n]<t)
+                l=mid+1;
+            else
+                r=mid;
+        }
+        return mat[r/mat.length][r%mat.length]==t;
+    }
+    static int c=0;
+    public static void reverseString(char[] s)
+    {
+        helper(s,0);
+    }
+    public static void helper(char[] s,int index)
+    {
+        if(index>=s.length)
+            return;
+        helper(s,index+1);
+        char temp=s[c];
+        s[c]=s[index];
+        s[index]=temp;
+        c++;
+    }
+    public static void main(String[] args)
+    {
+        setZeroes(new int[][]{{0,1,2,0},{3,4,5,2},{1,3,1,5}});
+        //searchMatrix(new int[][]{{1,1},{}},2);
+        String s="hello";
+        reverseString(s.toCharArray());
+
+    }
 }
