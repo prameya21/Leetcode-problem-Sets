@@ -823,6 +823,49 @@ public class leetcode2 {
         }
         return sb.length()==0?"/":sb.toString();
     }
+    public static int removeDuplicates(int[] nums)
+    {
+        int i=0;
+        for(int n:nums)
+        {
+            if(i<2 || n>nums[i-2])
+                nums[i++]=n;
+        }
+        return i;
+    }
+    public boolean search(int[] nums, int target)
+    {
+        if(nums.length<1)
+            return false;
+        int lo=0,hi=nums.length-1;
+        while(lo<=hi)
+        {
+            int mid=(lo+hi)/2;
+            if(nums[mid]==target)
+                return true;
+            if(nums[mid]<nums[hi] || nums[lo]>nums[mid])
+            {
+                if(nums[mid]<target && nums[hi]>=target)
+                {
+                    lo=mid+1;
+                }
+                else
+                    hi=mid-1;
+            }
+            else if(nums[hi]<nums[mid]||nums[lo]<nums[mid])
+            {
+                if(target>=nums[lo] && target<nums[mid])
+                {
+                    hi=mid-1;
+                }
+                else
+                    lo=mid+1;
+            }
+            else hi--;
+
+        }
+        return nums[lo]==target;
+    }
     public static void main(String[] args)
     {
         String[] s={"baa", "abcd", "abca", "cab", "cad"};
@@ -869,6 +912,7 @@ public class leetcode2 {
         node.next=new ListNode(2);
         rotateRight1(node,2);
         System.out.println(addBinary("1010","1011"));
+        removeDuplicates(new int[]{0,0,1,1,1,2,2,3,3,4,4});
 
     }
 }

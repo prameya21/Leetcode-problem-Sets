@@ -831,6 +831,26 @@ public class Linkedin_Leetcode
         Matcher m = patternObject.matcher(s);
         return m.find();
     }
+    public static TreeNode buildTree(int[] inorder, int[] postorder)
+    {
+        if(postorder==null || inorder==null || postorder.length==0 || inorder.length==0)
+            return null;
+        int n=postorder.length-1;
+        Map<Integer,Integer> hm=new HashMap<>();
+        for(int i=0;i<inorder.length;i++)
+            hm.put(inorder[i],i);
+        return buildPost(postorder,0,postorder.length-1,inorder,0,inorder.length-1,hm);
+    }
+    public static TreeNode buildPost(int[] postorder,int ps,int pe,int[] inorder,int is,int ie,Map<Integer,Integer> hm)
+    {
+        if(ps>pe || is>ie)
+            return null;
+        int breakIndex=hm.get(postorder[pe]);
+        TreeNode root=new TreeNode(postorder[pe]);
+        root.left=buildPost(postorder,ps,ps+breakIndex-is-1,inorder,is,breakIndex-1,hm);
+        root.right=buildPost(postorder,ps+breakIndex-is,pe-2,inorder,breakIndex+1,ie,hm);
+        return root;
+    }
     public static void main(String[] args)
     {
         //[[1,2],[3,5],[6,7],[8,10],[12,16]]
@@ -872,6 +892,9 @@ public class Linkedin_Leetcode
         System.out.println(canPartitionKSubsets(new int[]{2,2,2,2,3,4,5},4));
         System.out.println(subsets(new int[]{1,2,3}));
         System.out.println(minDistance("horse","ros"));
+        int [] in={9,3,15,20,7};
+        int [] pos={9,15,7,20,3};
+        buildTree(in,pos);
 
 
 
