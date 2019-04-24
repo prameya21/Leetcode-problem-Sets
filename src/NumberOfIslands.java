@@ -1,3 +1,6 @@
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class NumberOfIslands
 {
     /*
@@ -34,7 +37,7 @@ public class NumberOfIslands
             {
                 if(grid[i][j]=='1' && !visited[i][j])
                 {
-                    dfs(i,j,visited,grid);
+                    bfs(i,j,visited,grid);
                     cnt++;
                 }
             }
@@ -51,6 +54,29 @@ public class NumberOfIslands
         dfs(i,j+1,visited,grid);
         dfs(i-1,j,visited,grid);
         dfs(i,j-1,visited,grid);
+    }
+    public static void bfs(int i,int j,boolean[][] visited,char[][] grid)
+    {
+        Queue<int[]> q=new LinkedList<>();
+        q.offer(new int[]{i,j});
+        while(!q.isEmpty())
+        {
+            int size=q.size();
+            for(int k=0;k<size;k++)
+            {
+                int[] curr=q.poll();
+                visited[curr[0]][curr[1]]=true;
+                int[][] dir={{1,0},{-1,0},{0,1},{0,-1}};
+                for(int[] d:dir)
+                {
+                    int nr=curr[0]+d[0];
+                    int nc=curr[1]+d[1];
+                    if(nr<0 || nc<0 || nr>=grid.length || nc>=grid[0].length || visited[nr][nc] || grid[nr][nc]!='1')
+                        continue;
+                    q.offer(new int[]{nr,nc});
+                }
+            }
+        }
     }
     public static void main(String[] args)
     {
