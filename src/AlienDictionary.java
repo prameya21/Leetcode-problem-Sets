@@ -107,7 +107,7 @@ public class AlienDictionary
         for(int i=0;i<words.length;i++)
         {
             for(char c: words[i].toCharArray())
-                visited[c-'a']=0;mdc
+                visited[c-'a']=0;
         }
         for(int i=0;i<words.length-1;i++)
         {
