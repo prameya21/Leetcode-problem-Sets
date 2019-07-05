@@ -2092,9 +2092,238 @@ public class AmazonPrep
         }
         return -1;
     }
+    /*
+    Course Schedule 1
+    There are a total of n courses you have to take, labeled from 0 to n-1.
+
+    Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+    Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
+
+    Example 1:
+
+    Input: 2, [[1,0]]
+    Output: true
+    Explanation: There are a total of 2 courses to take.
+                 To take course 1 you should have finished course 0. So it is possible.
+    Example 2:
+
+    Input: 2, [[1,0],[0,1]]
+    Output: false
+    Explanation: There are a total of 2 courses to take.
+                 To take course 1 you should have finished course 0, and to take course 0 you should
+                 also have finished course 1. So it is impossible.
+    Note:
+
+    The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
+    You may assume that there are no duplicate edges in the input prerequisites.
+     */
+    public boolean canFinish(int numCourses,int[][] prerequistites)
+    {
+        List<Integer>[] graph=new List[numCourses];
+        for(int i=0;i<numCourses;i++)
+            graph[i]=new ArrayList<Integer>();
+        int[] degrees=new int[numCourses];
+        for(int[] p:prerequistites)
+        {
+            graph[p[1]].add(p[0]);
+            degrees[p[0]]++;
+        }
+        Queue<Integer> q=new LinkedList<>();
+        for(int i=0;i<degrees.length;i++)
+            if(degrees[i]==0)
+                q.offer(i);
+
+        Set<Integer> visited=new HashSet<>();
+        while(!q.isEmpty())
+        {
+            int curr=q.poll();
+            visited.add(curr);
+            for(int c:graph[curr])
+            {
+                degrees[c]--;
+                if(degrees[c]==0)
+                    q.offer(c);
+            }
+        }
+        return visited.size()==numCourses;
+
+    }
+    /*
+    Course Schedule 2
+    There are a total of n courses you have to take, labeled from 0 to n-1.
+
+    Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+
+    Given the total number of courses and a list of prerequisite pairs, return the ordering of courses you should take to finish all courses.
+
+    There may be multiple correct orders, you just need to return one of them. If it is impossible to finish all courses, return an empty array.
+
+    Example 1:
+
+    Input: 2, [[1,0]]
+    Output: [0,1]
+    Explanation: There are a total of 2 courses to take. To take course 1 you should have finished
+                 course 0. So the correct course order is [0,1] .
+    Example 2:
+
+    Input: 4, [[1,0],[2,0],[3,1],[3,2]]
+    Output: [0,1,2,3] or [0,2,1,3]
+    Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both
+                 courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0.
+                 So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3] .
+     */
+    public static int[] findOrder(int numCourses,int[][] prereqs)
+    {
+        int[] degree=new int[numCourses];
+        List<Integer>[] graph=new List[numCourses];
+        for(int i=0;i<numCourses;i++)
+            graph[i]=new ArrayList<>();
+        for(int[] p:prereqs)
+        {
+            graph[p[1]].add(p[0]);
+            degree[p[0]]++;
+        }
+        Queue<Integer> q=new LinkedList<>();
+        List<Integer> result=new ArrayList<>();
+        for(int i=0;i<degree.length;i++)
+            if(degree[i]==0)
+                q.offer(i);
+
+        Set<Integer> visited=new HashSet<>();
+        while(!q.isEmpty())
+        {
+            int curr=q.poll();
+            visited.add(curr);
+            result.add(curr);
+            for(int c:graph[curr])
+            {
+                if(!visited.contains(c))
+                {
+                    degree[c]--;
+                    if(degree[c]==0)
+                    {
+                        q.offer(c);
+                        visited.add(c);
+                    }
+
+                }
+            }
+        }
+        int[] ret=new int[result.size()];
+        for(int i=0;i<result.size();i++)
+            ret[i]=result.get(i);
+        return visited.size()==numCourses?ret:new int[0];
+    }
+    /*
+    Alien Dictionary
+    There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
+
+    Example 1:
+
+    Input:
+    [
+      "wrt",
+      "wrf",
+      "er",
+      "ett",
+      "rftt"
+    ]
+
+    Output: "wertf"
+    Example 2:
+
+    Input:
+    [
+      "z",
+      "x"
+    ]
+
+    Output: "zx"
+    Example 3:
+
+    Input:
+    [
+      "z",
+      "x",
+      "z"
+    ]
+
+    Output: ""
+
+    Explanation: The order is invalid, so return "".
+     */
+    public String alienOrder(String[] words)
+    {
+        Map<Character,Integer> degree=new HashMap<>();
+        Map<Character,Set<Character>> graph=new HashMap<>();
+        for(String w:words)
+        {
+            for(char c:w.toCharArray())
+            {
+                degree.put(c,0);
+                if(!graph.containsKey(c))
+                    graph.put(c,new HashSet<>());
+
+            }
+        }
+        for(int i=0;i<words.length-1;i++)
+        {
+            String word1=words[i];
+            String word2=words[i+1];
+            int len=Math.min(word1.length(),word2.length());
+            for(int k=0;k<len;k++)
+            {
+                char c1=word1.charAt(k);
+                char c2=word2.charAt(k);
+                if(c1!=c2)
+                {
+                    Set s=graph.get(c1);
+                    if(!s.contains(c2))
+                    {
+                        s.add(c2);
+                        graph.put(c1,s);
+                        degree.put(c2,degree.get(c2)+1);
+                    }
+                    break;
+                }
+            }
+        }
+        Set<Character> visited=new HashSet<>();
+        Queue<Character> q=new LinkedList<>();
+        StringBuilder sb=new StringBuilder();
+        for(char c: degree.keySet())
+            if(degree.get(c)==0)
+                q.offer(c);
+
+        while(!q.isEmpty())
+        {
+            char curr=q.poll();
+            visited.add(curr);
+            sb.append(curr);
+            for(char ch: graph.get(curr))
+            {
+                if(!visited.contains(ch))
+                {
+                    degree.put(ch,degree.get(ch)-1);
+                    if(degree.get(ch)==0)
+                    {
+                        visited.add(ch);
+                        q.offer(ch);
+                    }
+                }
+            }
+        }
+        return visited.size()==degree.size()?sb.toString():"";
+    }
     public static void main(String[] args)
     {
         AmazonPrep obj=new AmazonPrep();
         System.out.println(obj.search(new int[]{4,5,6,7,0,1,2},3));
+        int[] res=obj.findOrder(4,new int[][]{{1,0},{2,0},{3,1},{3,2}});
+        for(int i:res)
+            System.out.println(i);
+        System.out.println(obj.alienOrder(new String[]{"wrt","wrf","er","ett","rftt"}));
+        System.out.println(obj.alienOrder(new String[]{"za","zb","ca","cb"}));
     }
 }
