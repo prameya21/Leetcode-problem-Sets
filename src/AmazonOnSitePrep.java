@@ -241,6 +241,299 @@ class FreqStack
         return ret;
     }
 }
+/*
+    Median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle value.
+
+    For example,
+    [2,3,4], the median is 3
+
+    [2,3], the median is (2 + 3) / 2 = 2.5
+
+    Design a data structure that supports the following two operations:
+
+    void addNum(int num) - Add a integer number from the data stream to the data structure.
+    double findMedian() - Return the median of all elements so far.
+
+
+    Example:
+
+    addNum(1)
+    addNum(2)
+    findMedian() -> 1.5
+    addNum(3)
+    findMedian() -> 2
+
+
+    Follow up:
+
+    If all integer numbers from the stream are between 0 and 100, how would you optimize it?
+    If 99% of all integer numbers from the stream are between 0 and 100, how would you optimize it?
+ */
+class MedianFinder
+{
+    PriorityQueue<Integer> maxHeap=new PriorityQueue<>();
+    PriorityQueue<Integer> minHeap=new PriorityQueue<>(new Comparator<Integer>() {
+        @Override
+        public int compare(Integer o1, Integer o2)
+        {
+            return o2-o1;
+        }
+    });
+    public MedianFinder()
+    {}
+    public void addNum(int i)
+    {
+        maxHeap.offer(i);
+        minHeap.offer(maxHeap.poll());
+        if(maxHeap.size()<minHeap.size())
+            maxHeap.offer(minHeap.poll());
+    }
+    public double findMedian()
+    {
+        return maxHeap.size()>minHeap.size()?maxHeap.peek():(minHeap.peek()+maxHeap.peek())/2.0;
+    }
+}
+/*
+      Design Search Autocomplete System
+      Go to Discuss
+    Design a search autocomplete system for a search engine. Users may input a sentence (at least one word and end with a special character '#'). For each character they type except '#', you need to return the top 3 historical hot sentences that have prefix the same as the part of sentence already typed. Here are the specific rules:
+
+    The hot degree for a sentence is defined as the number of times a user typed the exactly same sentence before.
+    The returned top 3 hot sentences should be sorted by hot degree (The first is the hottest one). If several sentences have the same degree of hot, you need to use ASCII-code order (smaller one appears first).
+    If less than 3 hot sentences exist, then just return as many as you can.
+    When the input is a special character, it means the sentence ends, and in this case, you need to return an empty list.
+    Your job is to implement the following functions:
+
+    The constructor function:
+
+    AutocompleteSystem(String[] sentences, int[] times): This is the constructor. The input is historical data. Sentences is a string array consists of previously typed sentences. Times is the corresponding times a sentence has been typed. Your system should record these historical data.
+
+    Now, the user wants to input a new sentence. The following function will provide the next character the user types:
+
+    List<String> input(char c): The input c is the next character typed by the user. The character will only be lower-case letters ('a' to 'z'), blank space (' ') or a special character ('#'). Also, the previously typed sentence should be recorded in your system. The output will be the top 3 historical hot sentences that have prefix the same as the part of sentence already typed.
+
+
+    Example:
+    Operation: AutocompleteSystem(["i love you", "island","ironman", "i love leetcode"], [5,3,2,2])
+    The system have already tracked down the following sentences and their corresponding times:
+    "i love you" : 5 times
+    "island" : 3 times
+    "ironman" : 2 times
+    "i love leetcode" : 2 times
+    Now, the user begins another search:
+
+    Operation: input('i')
+    Output: ["i love you", "island","i love leetcode"]
+    Explanation:
+    There are four sentences that have prefix "i". Among them, "ironman" and "i love leetcode" have same hot degree. Since ' ' has ASCII code 32 and 'r' has ASCII code 114, "i love leetcode" should be in front of "ironman". Also we only need to output top 3 hot sentences, so "ironman" will be ignored.
+
+    Operation: input(' ')
+    Output: ["i love you","i love leetcode"]
+    Explanation:
+    There are only two sentences that have prefix "i ".
+
+    Operation: input('a')
+    Output: []
+    Explanation:
+    There are no sentences that have prefix "i a".
+
+    Operation: input('#')
+    Output: []
+    Explanation:
+    The user finished the input, the sentence "i a" should be saved as a historical sentence in system. And the following input will be counted as a new search.
+ */
+class AutocompleteSystem
+{
+    private class Trie
+    {
+        Trie[] next;
+        Map<String,Integer> freq;
+        public Trie()
+        {
+            next=new Trie[27];
+            freq=new HashMap<>();
+        }
+    }
+    Trie root;
+    String prefix="";
+    public int toInt(char c)
+    {
+        return c==' '?26:c-'a';
+    }
+    public void insert(Trie node,String s, int times)
+    {
+        for(char c:s.toCharArray())
+        {
+            if(node.next[toInt(c)]==null)
+                node.next[toInt(c)]=new Trie();
+            node=node.next[toInt(c)];
+            node.freq.put(s,node.freq.getOrDefault(s,0)+1);
+
+        }
+    }
+    public AutocompleteSystem(String[] sentences, int[] times)
+    {
+        for(int i=0;i<sentences.length;i++)
+            insert(root,sentences[i],times[i]);
+    }
+    public List<String> input(char c)
+    {
+        if(c=='#')
+        {
+            insert(root,prefix,1);
+            prefix="";
+            return new ArrayList<>();
+        }
+        else
+        {
+            prefix+=c;
+            Trie node=root;
+            for(char ch:prefix.toCharArray())
+            {
+                if(node.next[toInt(ch)]==null)
+                    return new ArrayList<>();
+                node=node.next[toInt(ch)];
+            }
+            PriorityQueue<Map.Entry<String,Integer>> pq=new PriorityQueue<>(new Comparator<Map.Entry<String, Integer>>() {
+                @Override
+                public int compare(Map.Entry<String, Integer> m1, Map.Entry<String, Integer> m2)
+                {
+                    if(m1.getValue()==m2.getValue())
+                        return m1.getKey().compareTo(m2.getKey());
+                    else
+                        return m2.getValue()-m1.getValue();
+                }
+            });
+            pq.addAll(node.freq.entrySet());
+            List<String> res=new ArrayList<>();
+            for(int i=0;i<3 && !pq.isEmpty();i++)
+                res.add(pq.poll().getKey());
+            return res;
+        }
+    }
+}
+/*
+    Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+
+    Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+
+    Example:
+
+    You may serialize the following tree:
+
+        1
+       / \
+      2   3
+         / \
+        4   5
+
+    as "[1,2,3,null,null,4,5]"
+    Clarification: The above format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+
+    Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
+ */
+class codec
+{
+    public String serialiaze(TreeNode root)
+    {
+        StringBuilder sb=new StringBuilder();
+        buildString(root,sb);
+        return sb.toString();
+    }
+    public void buildString(TreeNode root,StringBuilder sb)
+    {
+        if(root==null)
+            sb.append("null,");
+        else
+        {
+            sb.append(root.val+",");
+            buildString(root.left,sb);
+            buildString(root.right,sb);
+        }
+    }
+    public TreeNode deserialize(String str)
+    {
+        String[] s=str.split(",");
+        Queue<String> q=new LinkedList<>(Arrays.asList(s));
+        return buildTree(q);
+    }
+    TreeNode buildTree(Queue<String> q)
+    {
+        if(q.isEmpty())
+            return null;
+        String s=q.poll();
+        TreeNode root=new TreeNode(Integer.parseInt(s));
+        if(s=="null")
+            return null;
+        root.left=buildTree(q);
+        root.right=buildTree(q);
+        return root;
+    }
+}
+/*
+    Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+    push(x) -- Push element x onto stack.
+    pop() -- Removes the element on top of the stack.
+    top() -- Get the top element.
+    getMin() -- Retrieve the minimum element in the stack.
+
+
+    Example:
+
+    MinStack minStack = new MinStack();
+    minStack.push(-2);
+    minStack.push(0);
+    minStack.push(-3);
+    minStack.getMin();   --> Returns -3.
+    minStack.pop();
+    minStack.top();      --> Returns 0.
+    minStack.getMin();   --> Returns -2.
+ */
+class MinStack_Dup
+{
+    Stack<Integer> st;
+    Stack<Integer> minstack;
+    public MinStack_Dup()
+    {
+        st=new Stack<Integer>();
+        minstack=new Stack<Integer>();
+    }
+    public void push(int x)
+    {
+        st.push(x);
+        if(minstack.isEmpty())
+            minstack.push(x);
+        else
+            minstack.push(Math.min(minstack.peek(),x));
+    }
+    public void pop()
+    {
+        if(!st.isEmpty())
+            st.pop();
+        if(!minstack.isEmpty())
+            minstack.pop();
+    }
+    public int top()
+    {
+        if(!st.isEmpty())
+            return st.peek();
+        else
+            return -1;
+    }
+    public int getMin()
+    {
+        int min=minstack.pop();
+        Stack<Integer> temp=new Stack();
+        while(!st.isEmpty() && st.peek()!=min)
+            temp.push(st.pop());
+        st.pop();
+        while(!temp.isEmpty())
+            st.push(temp.pop());
+        return min;
+    }
+
+}
 public class AmazonOnSitePrep
 {
     /*
@@ -2926,15 +3219,11 @@ public class AmazonOnSitePrep
     }
     public static void main(String[] args)
     {
-        LRUCache obj=new LRUCache(2);
-        obj.put(1,1);
-        obj.put(2,2);
-        System.out.println(obj.get(1));
-        obj.put(3,3);
-        System.out.println(obj.get(2));
-        obj.put(4,4);
-        System.out.println(obj.get(1));
-        System.out.println(obj.get(3));
-        System.out.println(obj.get(4));
+        PriorityQueue<Integer> pq=new PriorityQueue<>(3);
+        pq.offer(4);
+        pq.offer(5);
+        pq.offer(8);
+        pq.offer(2);
+        pq.poll();
     }
 }
