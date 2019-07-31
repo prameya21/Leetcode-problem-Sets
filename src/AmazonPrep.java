@@ -2213,6 +2213,7 @@ public class AmazonPrep
         int[] ret=new int[result.size()];
         for(int i=0;i<result.size();i++)
             ret[i]=result.get(i);
+
         return visited.size()==numCourses?ret:new int[0];
     }
     /*
