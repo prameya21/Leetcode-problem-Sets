@@ -21,6 +21,6 @@ public class NextGreatest_ListVersion
     {
         List<Integer> list=new ArrayList<>(Arrays.asList(1,7,5,1,9,2,5,1));
         for(int i:nextGreat(list))
-            System.out.println(i);;
+            System.out.println(i);
     }
 }

@@ -46,6 +46,7 @@ public class WordSearch
         }
         return false;
     }
+
     public static void main(String[] args)
     {
         char[][] board={{'A','B','C','E'},{'S','F','E','S'},{'A','D','E','E'}};

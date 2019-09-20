@@ -33,7 +33,7 @@ randomSet.getRandom();
  */
 class RandomSet
 {
-    Set<Integer> set;
+    /*Set<Integer> set;
     Random rand;
     public RandomSet()
     {
@@ -68,7 +68,50 @@ class RandomSet
             ArrayList<Integer> temp=new ArrayList<>(set);
             return temp.get(rand.nextInt(temp.size()));
         }
+    }*/
+    List<Integer> num;
+    Map<Integer,Integer> map;
+    Random rand;
+    public RandomSet()
+    {
+        rand=new Random();
+        map=new HashMap<>();
+        num=new ArrayList<>();
     }
+    public boolean insert(int val)
+    {
+        if(map.containsKey(val))
+            return false;
+        else
+        {
+            map.put(val,num.size());
+            num.add(val);
+            return true;
+        }
+    }
+    public boolean remove(int val)
+    {
+        if(!map.containsKey(val))
+            return false;
+        else
+        {
+            int loc=map.get(val);
+            if(loc<num.size()-1)
+            {
+                int last=num.get(num.size()-1);
+                num.set(loc,last);
+                map.put(last,loc);
+            }
+            map.remove(val);
+            num.remove(num.size()-1);
+            return true;
+        }
+    }
+    public int getRandom()
+    {
+        return num.get(rand.nextInt(num.size()));
+    }
+
 }
 /*
 Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.

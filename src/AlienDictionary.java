@@ -42,13 +42,15 @@ public class AlienDictionary
     public static String alienOrderBFSTopologicalSort(String[] words)
     {
         Map<Character,Integer> degree=new HashMap<>();
-        Map<Character, Set<Character>> adjList=new HashMap<>();
-        for(String word:words)
+        Map<Character,Set<Character>> graph=new HashMap<>();
+        for(String w:words)
         {
-            for(char c: word.toCharArray())
+            for(char c:w.toCharArray())
             {
-                if(!degree.containsKey(c))
-                    degree.put(c,0);
+                degree.put(c,0);
+                if(!graph.containsKey(c))
+                    graph.put(c,new HashSet<>());
+
             }
         }
         for(int i=0;i<words.length-1;i++)
@@ -56,47 +58,44 @@ public class AlienDictionary
             String word1=words[i];
             String word2=words[i+1];
             int len=Math.min(word1.length(),word2.length());
-            for(int j=0;j<len;j++)
+            for(int k=0;k<len;k++)
             {
-                char c1=word1.charAt(j);
-                char c2=word2.charAt(j);
+                char c1=word1.charAt(k);
+                char c2=word2.charAt(k);
                 if(c1!=c2)
                 {
-                    Set<Character> set;
-                    if(adjList.containsKey(c1))
-                        set=adjList.get(c1);
-                    else
-                        set=new HashSet<>();
-                    set.add(c2);
-                    adjList.put(c1,set);
-                    degree.put(c2,degree.getOrDefault(c2,0)+1);
+                    Set s=graph.get(c1);
+                    if(!s.contains(c2))
+                    {
+                        s.add(c2);
+                        graph.put(c1,s);
+                        degree.put(c2,degree.get(c2)+1);
+                    }
                     break;
                 }
             }
         }
+        Set<Character> visited=new HashSet<>();
         Queue<Character> q=new LinkedList<>();
-        for(Character c:degree.keySet())
-        {
+        StringBuilder sb=new StringBuilder();
+        for(char c: degree.keySet())
             if(degree.get(c)==0)
-                q.add(c);
-        }
-        String result="";
+                q.offer(c);
+
         while(!q.isEmpty())
         {
-            char c=q.poll();
-            result+=c;
-            if(adjList.containsKey(c))
+            char curr=q.poll();
+            sb.append(curr);
+            for(char ch: graph.get(curr))
             {
-                for(char ch:adjList.get(c))
+                degree.put(ch,degree.get(ch)-1);
+                if(degree.get(ch)==0)
                 {
-                    degree.put(ch,degree.get(ch)-1);
-                    if(degree.get(ch)==0)
-                        q.offer(ch);
-
+                    q.offer(ch);
                 }
             }
         }
-        return result.length()==degree.size()?result:"";
+        return visited.size()==degree.size()?sb.toString():"";
     }
     public static String alienOrderDFSTopologicalSort(String[] words)
     {
