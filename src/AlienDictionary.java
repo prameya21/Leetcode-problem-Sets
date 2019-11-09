@@ -80,7 +80,10 @@ public class AlienDictionary
         StringBuilder sb=new StringBuilder();
         for(char c: degree.keySet())
             if(degree.get(c)==0)
+            {
                 q.offer(c);
+                visited.add(c);
+            }
 
         while(!q.isEmpty())
         {
@@ -88,10 +91,14 @@ public class AlienDictionary
             sb.append(curr);
             for(char ch: graph.get(curr))
             {
-                degree.put(ch,degree.get(ch)-1);
-                if(degree.get(ch)==0)
+                if(!visited.contains(ch))
                 {
-                    q.offer(ch);
+                    degree.put(ch,degree.get(ch)-1);
+                    if(degree.get(ch)==0)
+                    {
+                        visited.add(ch);
+                        q.offer(ch);
+                    }
                 }
             }
         }
