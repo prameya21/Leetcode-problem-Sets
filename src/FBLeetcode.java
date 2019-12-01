@@ -324,6 +324,618 @@ public class FBLeetcode
         return str;
 
     }
+    //Validate Binary Search Tree
+    {
+        /*
+        Given a binary tree, determine if it is a valid binary search tree (BST).
+
+        Assume a BST is defined as follows:
+
+        The left subtree of a node contains only nodes with keys less than the node's key.
+        The right subtree of a node contains only nodes with keys greater than the node's key.
+        Both the left and right subtrees must also be binary search trees.
+
+
+        Example 1:
+
+            2
+           / \
+          1   3
+
+        Input: [2,1,3]
+        Output: true
+        Example 2:
+
+            5
+           / \
+          1   4
+             / \
+            3   6
+
+        Input: [5,1,4,null,null,3,6]
+        Output: false
+        Explanation: The root node's value is 5 but its right child's value is 4.
+         */
+    }
+    public boolean isValidBST(TreeNode root)
+    {
+        return BSTUtil(root,Integer.MIN_VALUE,Integer.MAX_VALUE);
+    }
+    public boolean BSTUtil(TreeNode root,int min,int max)
+    {
+        if(root==null)
+            return true;
+        else if(root.val<=min || root.val>=max)
+            return false;
+        else
+            return BSTUtil(root.left,min,root.val) && BSTUtil(root.right,root.val,max);
+    }
+
+    //Flatten Binary Tree to Linked List
+    {
+        /*
+        Given a binary tree, flatten it to a linked list in-place.
+
+        For example, given the following tree:
+
+            1
+           / \
+          2   5
+         / \   \
+        3   4   6
+        The flattened tree should look like:
+
+        1
+         \
+          2
+           \
+            3
+             \
+              4
+               \
+                5
+                 \
+                  6
+         */
+    }
+    TreeNode prev=null;
+    public void flatten(TreeNode root)
+    {
+        if(root==null)
+            return;
+        flatten(root.right);
+        flatten(root.left);
+        root.left=null;
+        root.right=prev;
+        prev=root;
+    }
+    //Binary Tree Right Side View
+    {
+        /*
+        Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+
+        Example:
+
+        Input: [1,2,3,null,5,null,4]
+        Output: [1, 3, 4]
+        Explanation:
+
+           1            <---
+         /   \
+        2     3         <---
+         \     \
+          5     4       <---
+         */
+    }
+
+    public List<Integer> rightSideView(TreeNode root)
+    {
+        if(root==null)
+            return new ArrayList<>();
+        List<Integer> res=new ArrayList<>();
+        helper(root,0,res);
+        return res;
+    }
+    public void helper(TreeNode root, int depth, List<Integer> res)
+    {
+        if(root==null)
+            return;
+        if(depth==res.size())
+            res.add(root.val);
+        helper(root.right,depth+1,res);
+        helper(root.left,depth+1,res);
+    }
+    //Alien Dictionary
+    {
+        /*
+        There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of non-empty words from the dictionary, where words are sorted lexicographically by the rules of this new language. Derive the order of letters in this language.
+
+        Example 1:
+
+        Input:
+        [
+          "wrt",
+          "wrf",
+          "er",
+          "ett",
+          "rftt"
+        ]
+
+        Output: "wertf"
+        Example 2:
+
+        Input:
+        [
+          "z",
+          "x"
+        ]
+
+        Output: "zx"
+        Example 3:
+
+        Input:
+        [
+          "z",
+          "x",
+          "z"
+        ]
+
+        Output: ""
+
+        Explanation: The order is invalid, so return "".
+        Note:
+
+        You may assume all letters are in lowercase.
+        You may assume that if a is a prefix of b, then a must appear before b in the given dictionary.
+        If the order is invalid, return an empty string.
+        There may be multiple valid order of letters, return any one of them is fine.
+         */
+    }
+    public String alienOrder(String[] words)
+    {
+        Map<Character,Integer> degree=new HashMap<>();
+        Map<Character,Set<Character>> adj=new HashMap<>();
+        for(int i=0;i<words.length;i++)
+        {
+            for(char c:words[i].toCharArray())
+            {
+                degree.putIfAbsent(c,0);
+                adj.putIfAbsent(c,new HashSet<>());
+            }
+        }
+        for(int i=0;i<words.length-1;i++)
+        {
+            String word1=words[i];
+            String word2=words[i+1];
+            for(int j=0;j<Math.min(word1.length(),word2.length());j++)
+            {
+                char c1=word1.charAt(j);
+                char c2=word2.charAt(j);
+                if(c1!=c2)
+                {
+                    if(!adj.get(c1).contains(c2))
+                    {
+                        adj.get(c1).add(c2);
+                        degree.put(c2,degree.get(c2)+1);
+                    }
+                    break;
+                }
+            }
+        }
+        Set<Character> visited=new HashSet<>();
+        Queue<Character> q=new LinkedList<>();
+        for(char c:degree.keySet())
+            if(degree.get(c)==0)
+                q.offer(c);
+        StringBuilder sb=new StringBuilder();
+        while(!q.isEmpty())
+        {
+            char curr=q.poll();
+            visited.add(curr);
+            sb.append(curr);
+            for(char ch:adj.get(curr))
+            {
+                if(!visited.contains(ch))
+                {
+                    degree.put(ch,degree.get(ch)-1);
+                    if(degree.get(ch)==0)
+                    {
+                        visited.add(ch);
+                        q.offer(ch);
+                    }
+                }
+            }
+        }
+        return visited.size()==degree.size()?sb.toString():"";
+    }
+    public String alienOrderDFS(String[] words)
+    {
+        boolean[][] adj=new boolean[26][26];
+        int[] visited=new int[26];
+        Arrays.fill(visited,-1);
+        for(String w:words)
+            for(char c:w.toCharArray())
+                visited[c-'a']=0;
+
+        for(int i=0;i<words.length-1;i++)
+        {
+            String word1=words[i];
+            String word2=words[i+1];
+            for(int j=0;j<Math.max(word1.length(),word2.length());j++)
+            {
+                char c1=word1.charAt(j);
+                char c2=word2.charAt(j);
+                if(c1!=c2)
+                {
+                    adj[c1-'a'][c2-'a']=true;
+                    break;
+                }
+            }
+        }
+        Stack<Character> st=new Stack<>();
+        for(int i=0;i<26;i++)
+        {
+            if(visited[i]==0)
+            {
+                if(!dfs(visited,adj,i,st))
+                    return "";
+            }
+        }
+        StringBuilder sb=new StringBuilder();
+        while(!st.isEmpty())
+            sb.append(st.pop());
+        return sb.toString();
+    }
+    public boolean dfs(int[] visited, boolean[][] adj,int i, Stack<Character> st)
+    {
+        visited[i]=1;
+        for(int j=0;j<26;j++)
+        {
+            if(adj[i][j])
+            {
+                if(visited[j]==1)
+                    return false;
+                if(visited[j]==0 && !dfs(visited,adj,j,st))
+                    return false;
+            }
+        }
+        visited[i]=2;
+        char c=(char)(i+'a');
+        st.push(c);
+        return true;
+    }
+    //Binary Tree Vertical order Traversal
+    {
+        /*
+        Given a binary tree, return the vertical order traversal of its nodes' values. (ie, from top to bottom, column by column).
+
+        If two nodes are in the same row and column, the order should be from left to right.
+
+        Examples 1:
+
+        Input: [3,9,20,null,null,15,7]
+
+           3
+          /\
+         /  \
+         9  20
+            /\
+           /  \
+          15   7
+
+        Output:
+
+        [
+          [9],
+          [3,15],
+          [20],
+          [7]
+        ]
+        Examples 2:
+
+        Input: [3,9,8,4,0,1,7]
+
+             3
+            /\
+           /  \
+           9   8
+          /\  /\
+         /  \/  \
+         4  01   7
+
+        Output:
+
+        [
+          [4],
+          [9],
+          [3,0,1],
+          [8],
+          [7]
+        ]
+        Examples 3:
+
+        Input: [3,9,8,4,0,1,7,null,null,null,2,5] (0's right child is 2 and 1's left child is 5)
+
+             3
+            /\
+           /  \
+           9   8
+          /\  /\
+         /  \/  \
+         4  01   7
+            /\
+           /  \
+           5   2
+
+        Output:
+
+        [
+          [4],
+          [9,5],
+          [3,0,1],
+          [8,2],
+          [7]
+        ]
+         */
+    }
+    public List<List<Integer>> verticalOrder(TreeNode r)
+    {
+        Map<Integer,List<Integer>> map=new HashMap<>();
+        Queue<TreeNode> q=new LinkedList<>();
+        Queue<Integer> cols=new LinkedList<>();
+        q.offer(r);
+        cols.offer(0);
+        int min=0,max=0;
+        while(!q.isEmpty())
+        {
+            TreeNode curr=q.poll();
+            int c=cols.poll();
+            map.putIfAbsent(c,new ArrayList<>());
+            map.get(c).add(curr.val);
+            if(curr.left!=null)
+            {
+                q.offer(curr.left);
+                cols.offer(c-1);
+                min=Math.min(min,c-1);
+            }
+            if(curr.right!=null)
+            {
+                q.offer(curr.right);
+                cols.offer(c+1);
+                max=Math.max(max,c+1);
+            }
+        }
+        List<List<Integer>> res=new ArrayList<>();
+        for(int i=min;i<=max;i++)
+            res.add(map.get(i));
+        return res;
+    }
+    //Vertical order traversal where nodes are sorted at their respective depths
+    {
+        /*
+        Given a binary tree, return the vertical order traversal of its nodes values.
+
+        For each node at position (X, Y), its left and right children respectively will be at positions (X-1, Y-1) and (X+1, Y-1).
+
+        Running a vertical line from X = -infinity to X = +infinity, whenever the vertical line touches some nodes, we report the values of the nodes in order from top to bottom (decreasing Y coordinates).
+
+        If two nodes have the same position, then the value of the node that is reported first is the value that is smaller.
+
+        Return an list of non-empty reports in order of X coordinate.  Every report will have a list of values of nodes.
+
+
+
+        Example 1:
+
+
+
+        Input: [3,9,20,null,null,15,7]
+        Output: [[9],[3,15],[20],[7]]
+        Explanation:
+        Without loss of generality, we can assume the root node is at position (0, 0):
+        Then, the node with value 9 occurs at position (-1, -1);
+        The nodes with values 3 and 15 occur at positions (0, 0) and (0, -2);
+        The node with value 20 occurs at position (1, -1);
+        The node with value 7 occurs at position (2, -2).
+        Example 2:
+
+
+
+        Input: [1,2,3,4,5,6,7]
+        Output: [[4],[2],[1,5,6],[3],[7]]
+        Explanation:
+        The node with value 5 and the node with value 6 have the same position according to the given scheme.
+        However, in the report "[1,5,6]", the node value of 5 comes first since 5 is smaller than 6.
+         */
+    }
+    class Node
+    {
+        int x,y;
+        TreeNode node;
+        public Node(TreeNode node, int x, int y)
+        {
+            this.node=node;
+            this.x=x;
+            this.y=y;
+        }
+    }
+    public List<List<Integer>> verticalTraversal(TreeNode root)
+    {
+        if(root==null)
+            return null;
+        int min=0,max=0;
+        Queue<Node> q=new LinkedList<>();
+        Queue<Integer> cols=new LinkedList<>();
+        Map<Integer,List<Node>> map=new HashMap<>();
+        q.offer(new Node(root,0,0));
+        cols.offer(0);
+        while(!q.isEmpty())
+        {
+            Node curr=q.poll();
+            int c=cols.poll();
+            map.putIfAbsent(c,new ArrayList<>());
+            map.get(c).add(curr);
+            if(curr.node.left!=null)
+            {
+                q.offer(new Node(curr.node.left,c-1,curr.y+1));
+                cols.offer(c-1);
+                min=Math.min(min,c-1);
+            }
+            if(curr.node.right!=null)
+            {
+                q.offer(new Node(curr.node.right,c+1,curr.y+1));
+                cols.offer(c+1);
+                max=Math.max(max,c+1);
+            }
+        }
+        List<List<Integer>> res=new ArrayList<>();
+        for(int i=min;i<=max;i++)
+        {
+            Collections.sort(map.get(i), new Comparator<Node>()
+            {
+                @Override
+                public int compare(Node a, Node b)
+                {
+                    if(a.y==b.y)
+                        return a.node.val-b.node.val;
+                    return 0;
+                }
+            });
+            List<Integer> temp=new ArrayList<>();
+            for(Node n:map.get(i))
+                temp.add(n.node.val);
+            res.add(new ArrayList<>(temp));
+        }
+        return res;
+    }
+    //Accounts Merge
+    {
+        /*
+        Given a list accounts, each element accounts[i] is a list of strings, where the first element accounts[i][0] is a name, and the rest of the elements are emails representing emails of the account.
+
+        Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some email that is common to both accounts.
+        Note that even if two accounts have the same name, they may belong to different people as people could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have the same name.
+
+        After merging the accounts, return the accounts in the following format: the first element of each account is the name, and the rest of the elements are emails in sorted order. The accounts themselves can be returned in any order.
+
+        Example 1:
+        Input:
+        accounts = [["John", "johnsmith@mail.com", "john00@mail.com"], ["John", "johnnybravo@mail.com"], ["John", "johnsmith@mail.com", "john_newyork@mail.com"], ["Mary", "mary@mail.com"]]
+        Output: [["John", 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com'],  ["John", "johnnybravo@mail.com"], ["Mary", "mary@mail.com"]]
+        Explanation:
+        The first and third John's are the same person as they have the common email "johnsmith@mail.com".
+        The second John and Mary are different people as none of their email addresses are used by other accounts.
+        We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'],
+        ['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com']] would still be accepted.
+        Note:
+
+        The length of accounts will be in the range [1, 1000].
+        The length of accounts[i] will be in the range [1, 10].
+        The length of accounts[i][j] will be in the range [1, 30].
+         */
+    }
+    public List<List<String>> accountsMerge(List<List<String>> accounts)
+    {
+        Map<String,Set<String>> graph=new HashMap<>();
+        Map<String,String> name=new HashMap<>();
+        for(List<String> li:accounts)
+        {
+            String u_nname=li.get(0);
+            for(int i=1;i<li.size();i++)
+            {
+                graph.putIfAbsent(li.get(i),new HashSet<>());
+                name.put(li.get(i),u_nname);
+                if(i==1)
+                    continue;
+                graph.get(li.get(i)).add(li.get(i-1));
+                graph.get(li.get(i-1)).add(li.get(i));
+            }
+        }
+        Set<String> visited=new HashSet<>();
+        List<List<String>> res=new ArrayList<>();
+        for(String s:name.keySet())
+        {
+            List<String> temp=new ArrayList<>();
+            if(!visited.contains(s))
+            {
+                dfs(temp,visited,s,graph);
+                Collections.sort(temp);
+                temp.add(0,name.get(s));
+                res.add(new ArrayList<>(temp));
+            }
+        }
+        return res;
+    }
+    public void dfs(List<String> temp,Set<String> visited,String s,Map<String,Set<String>> graph)
+    {
+        if(visited.contains(s))
+            return;
+        temp.add(s);
+        visited.add(s);
+        for(String str:graph.get(s))
+            dfs(temp,visited,str,graph);
+
+    }
+    //Convert BST to Sorted Doubly Linked List
+    {
+        /*
+        Convert a Binary Search Tree to a sorted Circular Doubly-Linked List in place.
+
+        You can think of the left and right pointers as synonymous to the predecessor and successor pointers in a doubly-linked list.
+        For a circular doubly linked list, the predecessor of the first element is the last element, and the successor of the last element is the first element.
+        We want to do the transformation in place. After the transformation, the left pointer of the tree node should point to its predecessor,and the right pointer should point to its successor.
+        You should return the pointer to the smallest element of the linked list.
+
+
+        Example 1:
+        Input: root = [4,2,5,1,3]
+        Output: [1,2,3,4,5]
+        Explanation: The figure below shows the transformed BST. The solid line indicates the successor relationship, while the dashed line means the predecessor relationship.
+        Example 2:
+        Input: root = [2,1,3]
+        Output: [1,2,3]
+        Example 3:
+        Input: root = []
+        Output: []
+        Explanation: Input is an empty tree. Output is also an empty Linked List.
+        Example 4:
+        Input: root = [1]
+        Output: [1]
+
+        Constraints:
+        -1000 <= Node.val <= 1000
+        Node.left.val < Node.val < Node.right.val
+        All values of Node.val are unique.
+        0 <= Number of Nodes <= 2000
+         */
+
+    }
+    TreeNode head=null;
+    TreeNode tail=null;
+    public TreeNode treeToDoublyList(TreeNode root)
+    {
+        if(root==null)
+            return null;
+        helper(root);
+        prev.right=head;
+        head.left=prev;
+        return head;
+    }
+    public void helper(TreeNode root)
+    {
+        if(root==null)
+            return;
+        helper(root.left);
+        if(prev==null)
+            head=root;
+        else
+        {
+            prev.right=root;
+            root.left=prev;
+        }
+        prev=root;
+        helper(root.right);
+    }
     public static void main(String[] args)
     {
         FBLeetcode obj=new FBLeetcode();
@@ -333,6 +945,21 @@ public class FBLeetcode
         System.out.println(obj.groupAnagrams(new String[]{"eat", "tea", "tan", "ate", "nat", "bat"}));
         System.out.println(obj.multiply("123","42"));
         System.out.println(obj.addBinary("101","111"));
-        System.out.print(obj.minWindow("ADOBECODEBANC","ABC"));
+        System.out.println(obj.minWindow("ADOBECODEBANC","ABC"));
+        TreeNode root=new TreeNode(5);
+        root.left=new TreeNode(1);
+        root.right=new TreeNode(4);
+        root.right.left=new TreeNode(3);
+        root.right.right=new TreeNode(6);
+        System.out.println(obj.isValidBST(root));
+        System.out.println(obj.rightSideView(root));
+        System.out.println(obj.alienOrderDFS(new String[]{"wrt","wrf","er","ett","rftt"}));
+        System.out.println(obj.verticalTraversal(root));
+        List<List<String>> accounts=new ArrayList<>();
+        accounts.add(Arrays.asList("John","johnsmith@mail.com", "john00@mail.com"));
+        accounts.add(Arrays.asList("John", "johnnybravo@mail.com"));
+        accounts.add(Arrays.asList("John", "johnsmith@mail.com", "john_newyork@mail.com"));
+        accounts.add(Arrays.asList("Mary", "mary@mail.com"));
+        System.out.println(obj.accountsMerge(accounts));
     }
 }

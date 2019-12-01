@@ -17,18 +17,20 @@ public class LongestSubstringWithKDistinctCharacters
     Output: 2
     Explanation: T is "aa" which its length is 2.
      */
-    public static int longestSubstringLength(String str,int k)
+    public int lengthOfLongestSubstringKDistinct(String str, int k)
     {
         Map<Character,Integer> map=new HashMap<>();
         int j=0,res=0;
         for(int i=0;i<str.length();i++)
         {
-            map.put(str.charAt(i),map.getOrDefault(str.charAt(i),0)+1);
+            char c=str.charAt(i);
+            map.put(c,map.getOrDefault(c,0)+1);
             while(map.size()>k)
             {
-                map.put(str.charAt(j),map.get(str.charAt(j))-1);
-                if(map.get(str.charAt(j))==0)
-                    map.remove(str.charAt(j));
+                char ch=str.charAt(j);
+                map.put(ch,map.get(ch)-1);
+                if(map.get(ch)==0)
+                    map.remove(ch);
                 j++;
             }
             res=Math.max(res,i-j+1);
@@ -37,6 +39,7 @@ public class LongestSubstringWithKDistinctCharacters
     }
     public static void main(String[] args)
     {
-        System.out.println(longestSubstringLength("eceba",2));
+        LongestSubstringWithKDistinctCharacters obj=new LongestSubstringWithKDistinctCharacters();
+        System.out.println(obj.lengthOfLongestSubstringKDistinct("eceba",2));
     }
 }
