@@ -73,6 +73,53 @@ public class NodesDistanceK
         }
         return new ArrayList<>();
     }
+
+    public List<Integer> distanceK2(TreeNode root, TreeNode target, int K)
+    {
+        Map<TreeNode,TreeNode> parentmap=new HashMap<>();
+        linkParents(root,null,parentmap);
+        Queue<TreeNode> q =new LinkedList<>();
+        q.offer(target);
+        Set<TreeNode> visited=new HashSet<>();
+        visited.add(target);
+        visited.add(null);
+        int d=0;
+        List<Integer> res=new ArrayList<>();
+        while(!q.isEmpty())
+        {
+            if(d==K)
+            {
+                for(TreeNode n:q)
+                    res.add(n.val);
+                return res;
+            }
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                TreeNode curr=q.poll();
+                if(!visited.contains(curr.left))
+                {
+                    visited.add(curr.left);
+                    q.offer(curr.left);
+                }
+                if(!visited.contains(curr.right))
+                {
+                    visited.add(curr.right);
+                    q.offer(curr.right);
+                }
+                TreeNode parent=parentmap.get(curr);
+                if(!visited.contains(parent))
+                {
+                    visited.add(parent);
+                    q.offer(parent);
+                }
+            }
+            d++;
+        }
+        return new ArrayList<>();
+    }
+
+
     public void linkParents(TreeNode root, TreeNode parent, Map<TreeNode,TreeNode> map)
     {
         if(root!=null)
@@ -94,6 +141,6 @@ public class NodesDistanceK
         root.left.right.right=new TreeNode(4);
         root.right.left=new TreeNode(0);
         root.right.right=new TreeNode(8);
-        System.out.println(obj.distanceK(root,root.left,2));
+        System.out.println(obj.distanceK2(root,root.left,2));
     }
 }
