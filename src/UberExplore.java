@@ -682,6 +682,85 @@ public class UberExplore
         buildMap(root.right,parent,map);
     }
 
+    //Largest BST Subtree
+    {
+        /*
+        Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), where largest means subtree with largest number of nodes in it.
+
+        Note:
+        A subtree must include all of its descendants.
+
+        Example:
+
+        Input: [10,5,15,1,8,null,7]
+
+           10
+           / \
+          5  15
+         / \   \
+        1   8   7
+
+        Output: 3
+        Explanation: The Largest BST Subtree in this case is the highlighted one.
+                     The return value is the subtree's size, which is 3.
+         */
+    }
+    public int largestBSTSubtree(TreeNode root)
+    {
+        int[] res=helper(root);
+        return res[2];
+    }
+    public int[] helper(TreeNode root)
+    {
+        if(root==null)
+            return new int[]{Integer.MAX_VALUE,Integer.MIN_VALUE,0};
+        int[] left=helper(root.left);
+        int[] right=helper(root.right);
+        if(root.val>=left[1] && root.val<right[0])
+            return new int[]{Math.min(left[0],root.val),Math.max(right[1],root.val),left[2]+right[2]+1};
+        else
+            return
+            new int[]{Integer.MIN_VALUE,Integer.MAX_VALUE,Math.max(left[2],right[2])};
+    }
+    public int[] helper2(TreeNode root)
+    {
+        if(root==null)
+            return new int[]{1,0,Integer.MAX_VALUE,Integer.MIN_VALUE};
+        if(root.left==null && root.right==null)
+        {
+            int[] res={1,1,root.val,root.val};
+            return res;
+        }
+        int[] left=helper2(root.left);
+        int[] right=helper2(root.right);
+        if(left[0]==-1 || right[0]==-1)
+        {
+            int isbst=-1;
+            int size=Math.max(left[1],right[1]);
+            int min=Integer.MAX_VALUE;
+            int max=Integer.MIN_VALUE;
+            return new int[]{isbst,size,min,max};
+        }
+        else
+        {
+            if(root.val>left[3] && root.val<right[2])
+            {
+                int isbst=1;
+                int size=left[1]+right[1]+1;
+                int min=Math.min(root.val,left[2]);
+                int max=Math.max(root.val,right[3]);
+                return new int[]{isbst,size,min,max};
+            }
+            else
+            {
+                int isbst=-1;
+                int size=Math.max(left[1],right[1]);
+                int min=Integer.MAX_VALUE;
+                int max=Integer.MIN_VALUE;
+                return new int[]{isbst,size,min,max};
+            }
+        }
+    }
 
     //Trapping Rain Water
     {
@@ -1193,6 +1272,600 @@ public class UberExplore
         }
     }
 
+    //Merge Intervals
+    {
+        /*
+        Given a collection of intervals, merge all overlapping intervals.
+
+        Example 1:
+
+        Input: [[1,3],[2,6],[8,10],[15,18]]
+        Output: [[1,6],[8,10],[15,18]]
+        Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+        Example 2:
+
+        Input: [[1,4],[4,5]]
+        Output: [[1,5]]
+        Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+        NOTE: input types have been changed on April 15, 2019. Please reset to default code definition to get new method signature.
+         */
+    }
+    public int[][] merge(int[][] intervals)
+    {
+        if(intervals==null || intervals.length==0)
+            return null;
+        Arrays.sort(intervals,new Comparator<int[]>(){
+            @Override
+            public int compare(int[] a, int[] b)
+            {
+                return a[0]-b[0];
+            }
+        });
+        LinkedList<int[]> list=new LinkedList<>();
+        for(int[] i:intervals)
+        {
+            if(list.isEmpty() || list.getLast()[1]<i[0])
+                list.offer(i);
+            else
+                list.getLast()[1]=Math.max(list.getLast()[1],i[1]);
+        }
+        return list.toArray(new int[list.size()][]);
+
+    }
+
+    //Number of Islands
+    {
+        /*
+            Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by
+            connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+            Example 1:
+
+            Input:
+            11110
+            11010
+            11000
+            00000
+
+            Output: 1
+            Example 2:
+
+            Input:
+            11000
+            11000
+            00100
+            00011
+
+            Output: 3
+         */
+    }
+    public int numIslands(char[][] grid)
+    {
+        if(grid==null || grid.length==0)
+            return 0;
+        int cnt=0;
+        for(int i=0;i<grid.length;i++)
+            for(int j=0;j<grid[0].length;j++)
+                if(grid[i][j]=='1')
+                {
+                    cnt++;
+                    dfs(grid,i,j);
+                }
+        return cnt;
+    }
+    public void dfs(char[][] grid, int i, int j)
+    {
+        if(i<0 || j<0 || i>=grid.length || j>=grid[0].length || grid[i][j]!='1')
+            return;
+        dfs(grid,i+1,j);
+        dfs(grid,i-1,j);
+        dfs(grid,i,j+1);
+        dfs(grid,i,j-1);
+    }
+
+
+    //Walls and Gates
+    {
+        /*
+        You are given a m x n 2D grid initialized with these three possible values.
+
+        -1 - A wall or an obstacle.
+        0 - A gate.
+        INF - Infinity means an empty room. We use the value 231 - 1 = 2147483647 to represent INF as you may assume that the distance to a gate is less than 2147483647.
+        Fill each empty room with the distance to its nearest gate. If it is impossible to reach a gate, it should be filled with INF.
+
+        Example:
+
+        Given the 2D grid:
+
+        INF  -1  0  INF
+        INF INF INF  -1
+        INF  -1 INF  -1
+          0  -1 INF INF
+        After running your function, the 2D grid should be:
+
+          3  -1   0   1
+          2   2   1  -1
+          1  -1   2  -1
+          0  -1   3   4
+         */
+    }
+    public void wallsAndGates(int[][] rooms)
+    {
+        if(rooms==null || rooms.length==0)
+            return;
+        int empty=Integer.MAX_VALUE;
+        Queue<int[]> q=new LinkedList<>();
+
+        for(int i=0;i<rooms.length;i++)
+            for(int j=0;j<rooms[0].length;j++)
+                if(rooms[i][j]==0)
+                    q.offer(new int[]{i,j});
+
+        int[][] dir={{1,0},{-1,0},{0,1},{0,-1}};
+        while(!q.isEmpty())
+        {
+            int[] curr=q.poll();
+            for(int[] d:dir)
+            {
+                int nr=curr[0]+d[0];
+                int nc=curr[1]+d[1];
+                if(nr<0 || nc<0 || nr>=rooms.length || nc>=rooms[0].length || rooms[nr][nc]!=empty)
+                    continue;
+                rooms[nr][nc]=rooms[curr[0]][curr[1]]+1;
+                q.offer(new int[]{nr,nc});
+            }
+        }
+    }
+
+    //Max Area of Island
+    {
+        /*
+        Given a non-empty 2D array grid of 0's and 1's, an island is a group of 1's (representing land) connected 4-directionally (horizontal or vertical.) You may assume all four edges of the grid are surrounded by water.
+
+        Find the maximum area of an island in the given 2D array. (If there is no island, the maximum area is 0.)
+
+        Example 1:
+
+        [[0,0,1,0,0,0,0,1,0,0,0,0,0],
+        [0,0,0,0,0,0,0,1,1,1,0,0,0],
+        [0,1,1,0,1,0,0,0,0,0,0,0,0],
+        [0,1,0,0,1,1,0,0,1,0,1,0,0],
+        [0,1,0,0,1,1,0,0,1,1,1,0,0],
+        [0,0,0,0,0,0,0,0,0,0,1,0,0],
+        [0,0,0,0,0,0,0,1,1,1,0,0,0],
+        [0,0,0,0,0,0,0,1,1,0,0,0,0]]
+        Given the above grid, return 6. Note the answer is not 11, because the island must be connected 4-directionally.
+        Example 2:
+
+        [[0,0,0,0,0,0,0,0]]
+        Given the above grid, return 0.
+        Note: The length of each dimension in the given grid does not exceed 50.
+         */
+    }
+    public int maxAreaOfIsland(int[][] grid)
+    {
+        if(grid==null || grid.length==0)
+            return 0;
+        int area=0;
+        for(int i=0;i<grid.length;i++)
+            for(int j=0;j<grid[0].length;j++)
+                if(grid[i][j]==1)
+                {
+                    area=Math.max(area,dfs(grid,i,j));
+                }
+        return area;
+    }
+    public int dfs(int[][] grid, int i, int j)
+    {
+        if(i<0 || j<0 || i>=grid.length || j>=grid[0].length || grid[i][j]!=1)
+            return 0;
+        grid[i][j]=0;
+        return 1+dfs(grid,i+1,j)+dfs(grid,i-1,j)+dfs(grid,i,j+1)+dfs(grid,i,j-1);
+    }
+
+    //Remove Invalid Parenthesis
+    {
+        /*
+                Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.
+
+                Note: The input string may contain letters other than the parentheses ( and ).
+
+                Example 1:
+
+                Input: "()())()"
+                Output: ["()()()", "(())()"]
+                Example 2:
+
+                Input: "(a)())()"
+                Output: ["(a)()()", "(a())()"]
+                Example 3:
+
+                Input: ")("
+                Output: [""]
+         */
+    }
+    public List<String> removeInvalidParentheses(String s)
+    {
+        List<String> res=new ArrayList<>();
+        if(s==null || s.length()==0)
+            return res;
+        boolean found=false;
+        Queue<String> q=new LinkedList<>();
+        Set<String> visited=new HashSet<>();
+        q.offer(s);
+        visited.add(s);
+        while(!q.isEmpty())
+        {
+            String curr=q.poll();
+            if(isValid(curr))
+            {
+                res.add(curr);
+                found=true;
+            }
+            if(found)
+                continue;
+            for(int i=0;i<curr.length();i++)
+            {
+                if(curr.charAt(i)!=')' && curr.charAt(i)!='(')
+                    continue;
+                String t=curr.substring(0,i)+curr.substring(i+1);
+                if(visited.contains(t))
+                    continue;
+                q.offer(t);
+                visited.add(t);
+            }
+        }
+        return res;
+    }
+    public boolean isValid(String s)
+    {
+        int count=0;
+        for(char c:s.toCharArray())
+        {
+            if(c=='(')
+                count++;
+            else if(c==')')
+            {
+                count--;
+                if(count<0)
+                    return false;
+            }
+        }
+        return count==0;
+    }
+
+
+
+    //Shortest Bridge
+    {
+        /*
+        In a given 2D binary array A, there are two islands.  (An island is a 4-directionally connected group of 1s not connected to any other 1s.)
+
+        Now, we may change 0s to 1s so as to connect the two islands together to form 1 island.
+
+        Return the smallest number of 0s that must be flipped.  (It is guaranteed that the answer is at least 1.)
+
+
+
+        Example 1:
+
+        Input: [[0,1],[1,0]]
+        Output: 1
+        Example 2:
+
+        Input: [[0,1,0],[0,0,0],[0,0,1]]
+        Output: 2
+        Example 3:
+
+        Input: [[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]]
+        Output: 1
+
+
+        Note:
+
+        1 <= A.length = A[0].length <= 100
+        A[i][j] == 0 or A[i][j] == 1
+
+         */
+    }
+    public int shortestBridge(int[][] A)
+    {
+        if(A==null || A.length==0)
+            return 0;
+
+        boolean found=false;
+        for(int i=0;i<A.length;i++)
+        {
+            if(found)
+                break;
+            for(int j=0;j<A[0].length;j++)
+            {
+                if(A[i][j]==1)
+                {
+                    found=true;
+                    dfsShortestBridge(A,i,j);
+                    break;
+                }
+            }
+        }
+        boolean[][] visited=new boolean[A.length][A[0].length];
+        Queue<int[]> q=new LinkedList<>();
+        for(int i=0;i<A.length;i++)
+        {
+            for(int j=0;j<A[0].length;j++)
+            {
+                if(A[i][j]==2)
+                {
+                    visited[i][j]=true;
+                    q.offer(new int[]{i,j});
+                }
+            }
+        }
+
+        int[][] dirs={{1,0},{0,1},{-1,0},{0,-1}};
+        int count=0;
+        while(!q.isEmpty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                int[] curr=q.poll();
+                if(A[curr[0]][curr[1]]==1)
+                    return count-1;
+                for(int[] d:dirs)
+                {
+                    int nr=curr[0]+d[0];
+                    int nc=curr[1]+d[1];
+                    if(nr<0 || nr>=A.length || nc<0 || nc>=A[0].length || visited[nr][nc])
+                        continue;
+                    q.offer(new int[]{nr,nc});
+                    visited[nr][nc]=true;
+                }
+            }
+            count++;
+        }
+        return 0;
+    }
+    public void dfsShortestBridge(int[][] grid, int i, int j)
+    {
+        if(i<0 || i>=grid.length || j<0 || j>=grid[0].length || grid[i][j]!=1)
+            return;
+        grid[i][j]=2;
+        dfsShortestBridge(grid,i-1,j);
+        dfsShortestBridge(grid,i+1,j);
+        dfsShortestBridge(grid,i,j+1);
+        dfsShortestBridge(grid,i,j-1);
+    }
+
+    //Bus Routes
+    {
+     /*
+        We have a list of bus routes. Each routes[i] is a bus route that the i-th bus repeats forever. For example if routes[0] = [1, 5, 7], this means that the first bus (0-th indexed) travels in the sequence 1->5->7->1->5->7->1->... forever.
+
+        We start at bus stop S (initially not on a bus), and we want to go to bus stop T. Travelling by buses only, what is the least number of buses we must take to reach our destination? Return -1 if it is not possible.
+
+        Example:
+        Input:
+        routes = [[1, 2, 7], [3, 6, 7]]
+        S = 1
+        T = 6
+        Output: 2
+        Explanation:
+        The best strategy is take the first bus to the bus stop 7, then take the second bus to the bus stop 6.
+        Note:
+
+        1 <= routes.length <= 500.
+        1 <= routes[i].length <= 500.
+        0 <= routes[i][j] < 10 ^ 6.
+     */
+    }
+    public int numBusesToDestination(int[][] routes, int S, int T)
+    {
+        if(S==T)
+            return 0;
+        Map<Integer,List<Integer>> map=new HashMap<>();
+        for(int i=0;i<routes.length;i++)
+        {
+            for(int j=0;j<routes[i].length;j++)
+            {
+                map.putIfAbsent(routes[i][j],new ArrayList<>());
+                map.get(routes[i][j]).add(i);
+            }
+        }
+        Queue<Integer> q=new LinkedList<>();
+        Set<Integer> visited=new HashSet<>();
+        q.offer(S);
+        int res=0;
+        while(!q.isEmpty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                int bus=q.poll();
+                for(int route:map.get(bus))
+                {
+                    if(visited.contains(route))
+                        continue;
+                    visited.add(route);
+                    for(int buses:routes[route])
+                    {
+                        if(buses==T)
+                            return res+1;
+                        q.offer(buses);
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
+    }
+
+
+    //WordBreak
+    {
+        /*
+        Given a non-empty string s and a dictionary wordDict containing a list of non-empty words, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+        Note:
+
+        The same word in the dictionary may be reused multiple times in the segmentation.
+        You may assume the dictionary does not contain duplicate words.
+        Example 1:
+
+        Input: s = "leetcode", wordDict = ["leet", "code"]
+        Output: true
+        Explanation: Return true because "leetcode" can be segmented as "leet code".
+        Example 2:
+
+        Input: s = "applepenapple", wordDict = ["apple", "pen"]
+        Output: true
+        Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
+                     Note that you are allowed to reuse a dictionary word.
+        Example 3:
+
+        Input: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
+        Output: false
+         */
+    }
+
+    public boolean wordBreakBFS(String s, List<String> wordDict)
+    {
+        Set<String> dict=new HashSet<>(wordDict);
+        Queue<Integer> q=new LinkedList<>();
+        boolean[] visited=new boolean[s.length()+1];
+        q.offer(0);
+        visited[0]=true;
+        while(!q.isEmpty())
+        {
+            int idx=q.poll();
+            for(int i=idx+1;i<=s.length();i++)
+            {
+                if(dict.contains(s.substring(idx,i)) && !visited[i])
+                {
+                    if(i==s.length())
+                        return true;
+                    q.offer(i);
+                    visited[i]=true;
+                }
+            }
+        }
+        return false;
+
+    }
+
+
+    public boolean wordBreak(String s, List<String> wordDict)
+    {
+        if(s==null || s.length()==0)
+            return false;
+        Set<String> dict=new HashSet<>(wordDict);
+        return wordBreakHelper(s,0,dict,new boolean[s.length()]);
+    }
+    public boolean wordBreakHelper(String s, int idx, Set<String> dict, boolean[] visited)
+    {
+        if(idx==s.length())
+            return true;
+        if(idx>s.length())
+            return false;
+        if(visited[idx])
+            return true;
+        for(int i=idx+1;i<=s.length();i++)
+        {
+            if(dict.contains(s.substring(idx,i)) && wordBreakHelper(s,i,dict,visited))
+            {
+                visited[idx]=true;
+                return true;
+            }
+        }
+        visited[idx]=false;
+        return false;
+    }
+
+
+    //Perfect Squares
+    {
+        /*
+        Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+        Example 1:
+
+        Input: n = 12
+        Output: 3
+        Explanation: 12 = 4 + 4 + 4.
+        Example 2:
+
+        Input: n = 13
+        Output: 2
+        Explanation: 13 = 4 + 9.
+         */
+
+    }
+    public int numSquares(int n)
+    {
+        if(n==0)
+            return 0;
+        if(n==1)
+            return 1;
+        List<Integer> squares=new ArrayList<>();
+        for(int i=1;i*i<n;i++)
+            squares.add(i*i);
+        Queue<Integer> q=new LinkedList<>();
+        Set<Integer> visited=new HashSet<>();
+        q.offer(n);
+        int count=0;
+        while(!q.isEmpty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                int curr=q.poll();
+                for(int s:squares)
+                {
+                    if(curr-s==0)
+                        return count+1;
+                    if(!visited.contains(curr-s))
+                    {
+                        q.offer(curr-s);
+                        visited.add(curr-s);
+                    }
+                }
+            }
+            count++;
+        }
+        return -1;
+    }
+
+    //Longest Increasing Subsequence
+    {
+        /*
+        Given an unsorted array of integers, find the length of longest increasing subsequence.
+
+        Example:
+
+        Input: [10,9,2,5,3,7,101,18]
+        Output: 4
+        Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+        Note:
+
+        There may be more than one LIS combination, it is only necessary for you to return the length.
+        Your algorithm should run in O(n2) complexity.
+         */
+    }
+    public int lengthOfLIS(int[] nums)
+    {
+
+    }
+
+
+
+
+
+
+
+
+
+
     public static void main(String[] args)
     {
         UberExplore obj=new UberExplore();
@@ -1203,7 +1876,10 @@ public class UberExplore
         System.out.println(obj.trap_stack(new int[]{0,1,0,2,1,0,1,3,2,1,2,1}));
         System.out.println(obj.calculate3("2*(5+5*2)/3+(6/2+8)"));
         System.out.println(obj.minMeetingRoomsPriorityQueue(new int[][]{{1,10},{2,7},{3,19},{8,12},{10,20},{11,30}}));
-        System.out.println(obj.subsets(new int[]{1,2,3}));
+        System.out.println(obj.removeInvalidParentheses("()())()"));
+        System.out.println(obj.numBusesToDestination(new int[][]{{1,2,7},{3,6,7}},1,6));
+        System.out.println(obj.wordBreak("applepenapple",Arrays.asList("apple","pen")));
+        System.out.println(obj.numSquares(12));
 
     }
 

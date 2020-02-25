@@ -30,13 +30,31 @@ public class InOrderSuccessorBST
     {
         if(root==null)
             return null;
-        else if(root.val<=p.val)
+        if(root.val<=p.val)
             return inorderSuccessor(root.right,p);
         else
         {
             TreeNode left=inorderSuccessor(root.left,p);
             return left==null?root:left;
         }
+    }
+
+    public TreeNode inOrderSuccessorIter(TreeNode root, TreeNode p)
+    {
+        if(root==null)
+            return null;
+        TreeNode temp=null;
+        while(root!=null)
+        {
+            if(root.val<=p.val)
+                root=root.right;
+            else
+            {
+                temp=root;
+                root=root.left;
+            }
+        }
+        return temp;
     }
 
 
@@ -49,8 +67,20 @@ public class InOrderSuccessorBST
         root.left.left.left=new TreeNode(1);
         root.left.right=new TreeNode(4);
         root.right=new TreeNode(6);
+
+
+        TreeNode node=new TreeNode(20);
+        node.left=new TreeNode(8);
+        node.left.left=new TreeNode(4);
+        node.left.right=new TreeNode(12);
+        node.left.right.left=new TreeNode(10);
+        node.left.right.right=new TreeNode(14);
+        node.right=new TreeNode(22);
+
         InOrderSuccessorBST obj=new InOrderSuccessorBST();
-        obj.inorderTraversal(root);
+        obj.inorderTraversal(node);
+        System.out.print("\n");;
+        System.out.println(obj.inOrderSuccessorIter(node,node.left.right.right).val);
     }
 
 }

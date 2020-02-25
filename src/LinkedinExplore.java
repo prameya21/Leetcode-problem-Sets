@@ -1144,9 +1144,9 @@ public class LinkedinExplore
             N=-N;
             x=1/x;
         }
-        return fastPow(x,n);
+        return fastPow(x,N);
     }
-    public double fastPow(int x,int n)
+    public double fastPow(int x,long n)
     {
         if(n==1.0)
             return 1.0;

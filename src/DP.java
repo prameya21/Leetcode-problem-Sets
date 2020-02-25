@@ -212,7 +212,7 @@ public class DP
         System.out.println("The island count is"+countIslands(island,v));
         int arr3[]={-10,-5,2,2,2,3,4,7,9,12,13};
         System.out.println("Magic Index= "+magicIndexDup(arr3,0,arr3.length-1));
-        ArrayList<String> result=permute("abcd");
+        ArrayList<String> result=permute("abc");
         System.out.println(result);
         permute2("abca");
         System.out.println();
