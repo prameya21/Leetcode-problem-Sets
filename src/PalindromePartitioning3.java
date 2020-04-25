@@ -2,7 +2,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PalindromePartitioning2
+public class PalindromePartitioning3
 {
     /*
         You are given a string s containing lowercase letters and an integer k. You need to :
@@ -117,7 +117,7 @@ public class PalindromePartitioning2
     }
     public static void main(String[] args)
     {
-        PalindromePartitioning2 obj=new PalindromePartitioning2();
+        PalindromePartitioning3 obj=new PalindromePartitioning3();
         System.out.println(obj.palindromePartition("aabbc",3));
     }
 }

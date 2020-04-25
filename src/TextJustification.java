@@ -59,67 +59,64 @@ public class TextJustification
     ]
      */
 
+
     public List<String> fullJustify(String[] words, int maxWidth)
     {
         int left=0;
-        List<String> result=new ArrayList<>();
+        List<String> res=new ArrayList<>();
+        if(words.length==0)
+            return res;
         while(left<words.length)
         {
             int right=findRight(words,left,maxWidth);
             String str=justify(left,right,words,maxWidth);
-            result.add(str);
+            res.add(str);
             left=right+1;
         }
-        return result;
+        return res;
     }
+
     public int findRight(String[] words,int left, int maxWidth)
     {
-        int right=left;
-        int sum=words[right++].length();
+        int right=left, sum=words[right++].length();
         while(right<words.length && sum+1+words[right].length()<=maxWidth)
-        {
             sum+=1+words[right++].length();
-        }
         return right-1;
     }
+
     public String justify(int left, int right, String[] words, int maxWidth)
     {
-        if(right-left==0)
-            return words[left]+blank(maxWidth-words[left].length());
+        if(right==left)
+            return words[right]+blank(maxWidth-words[right].length());
         boolean isLastLine=right==words.length-1;
-        int numSpaces=right-left;
-        int totalSpaces=maxWidth-wordsLength(left,right,words);
-
-        String blankSpace=isLastLine?" ":blank(totalSpaces/numSpaces);
-        int remainder=isLastLine?0:totalSpaces%numSpaces;
-
+        int numWords=right-left;
+        int totalSpaces=maxWidth-totalLength(words,left,right);
+        String blankSpace=isLastLine?" ":blank(totalSpaces/numWords);
+        int rem=isLastLine?0:totalSpaces%numWords;
         StringBuilder sb=new StringBuilder();
         for(int i=left;i<=right;i++)
         {
             sb.append(words[i]);
             sb.append(blankSpace);
-            sb.append(remainder-->0?" ":"");
+            sb.append(rem-->0?" ":"");
         }
         return sb.toString().trim()+blank(maxWidth-sb.toString().trim().length());
 
     }
-    public int wordsLength(int left, int right, String[] words)
+    public int totalLength(String[] words, int left, int right)
     {
-        int totalLength=0;
+        int length=0;
         for(int i=left;i<=right;i++)
-        {
-            totalLength+=words[i].length();
-        }
-        return totalLength;
+            length+=words[i].length();
+        return length;
     }
-    public String blank(int len)
+    public String blank(int length)
     {
-        StringBuilder sb=new StringBuilder();
-        for(int i=0;i<len;i++)
-            sb.append(" ");
-        return sb.toString();
+        String str="";
+        for(int i=0;i<length;i++)
+            str+=" ";
+        return str;
     }
-
 
 
     public static void main(String[] args)
