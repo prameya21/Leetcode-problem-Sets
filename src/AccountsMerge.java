@@ -68,6 +68,66 @@ public class AccountsMerge
             dfs(temp,graph,visited,str);
         }
     }
+
+
+
+    public List<List<String>> accountsMerge2(List<List<String>> accounts)
+    {
+        Map<String,String> nameMap=new HashMap<>();
+        Map<String,Set<String>> map=new HashMap<>();
+
+        for(List<String> elem:accounts)
+        {
+            String name=elem.get(0);
+            for(int i=1;i<elem.size();i++)
+            {
+                nameMap.put(elem.get(i),name);
+                if(i==elem.size()-1)
+                    continue;
+                map.putIfAbsent(elem.get(i),new HashSet<>());
+                map.putIfAbsent(elem.get(i+1),new HashSet<>());
+                map.get(elem.get(i)).add(elem.get(i+1));
+                map.get(elem.get(i+1)).add(elem.get(i));
+            }
+        }
+
+        List<List<String>> res=new ArrayList<>();
+        Set<String> visited=new HashSet<>();
+        for(String s:nameMap.keySet())
+        {
+            if(!visited.contains(s))
+            {
+                List<String> temp=new ArrayList<>();
+                bfs(visited,s,map,temp);
+                Collections.sort(temp);
+                temp.add(0,nameMap.get(s));
+                res.add(new ArrayList<>(temp));
+            }
+        }
+        return res;
+    }
+
+    public void bfs(Set<String> visited, String src, Map<String,Set<String>> map, List<String> temp)
+    {
+        Queue<String> q=new LinkedList<>();
+        q.offer(src);
+        visited.add(src);
+        temp.add(src);
+        while(!q.isEmpty())
+        {
+            String curr=q.poll();
+            if(!map.containsKey(curr) || map.get(curr)==null)
+                continue;
+            for(String nxt:map.get(curr))
+            {
+                if(visited.contains(nxt))
+                    continue;
+                q.offer(nxt);
+                visited.add(nxt);
+                temp.add(nxt);
+            }
+        }
+    }
     public static void main(String[] args)
     {
         List<List<String>> accounts=new ArrayList<>();
@@ -76,6 +136,6 @@ public class AccountsMerge
         accounts.add(Arrays.asList("John", "johnsmith@mail.com", "john_newyork@mail.com"));
         accounts.add(Arrays.asList("Mary", "mary@mail.com"));
         AccountsMerge obj=new AccountsMerge();
-        System.out.println(obj.accountsMerge(accounts));
+        System.out.println(obj.accountsMerge2(accounts));
     }
 }

@@ -1,7 +1,4 @@
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class SortCharactersByFrequency
 {
@@ -66,6 +63,7 @@ public class SortCharactersByFrequency
         }
         return sb.toString();
     }
+
     public static void main(String[] args)
     {
         SortCharactersByFrequency obj=new SortCharactersByFrequency();

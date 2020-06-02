@@ -40,6 +40,7 @@ public class WordDictionary
     /** Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter. */
     public boolean search(String word)
     {
+
         return util(word.toCharArray(),0,node);
     }
     public boolean util(char[] c,int k,TrieNode root)
@@ -59,15 +60,19 @@ public class WordDictionary
         return false;
     }
 
+
+
+
     public static void main(String args[])
     {
         WordDictionary wd=new WordDictionary();
-        wd.addWord("bad");
-        wd.addWord("dad");
-        wd.addWord("mad");
-        System.out.println(wd.search("pad"));
-        System.out.println(wd.search("bad"));
-        System.out.println(wd.search(".ad"));
-        System.out.println(wd.search("b.."));
+        wd.addWord("a");
+        wd.addWord("a");
+
+        System.out.println(wd.search("."));
+        System.out.println(wd.search("a"));
+        System.out.println(wd.search("aa"));
+        System.out.println(wd.search(".a"));
+        System.out.println(wd.search("a."));
     }
 }
