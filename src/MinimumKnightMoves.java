@@ -93,9 +93,48 @@ public class MinimumKnightMoves
         return -1;
     }
 
+
+    public int minKnightMoves2(int x, int y)
+    {
+        x=Math.abs(x);
+        y=Math.abs(y);
+        Queue<int[]> q=new LinkedList<>();
+        Set<String> visited=new HashSet<>();
+        q.offer(new int[]{0,0});
+        visited.add(getHash(0,0));
+        int[][] dirs={{2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}, {2, -1}};
+
+        int count=0;
+        while(!q.isEmpty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                int[] curr=q.poll();
+                if(curr[0]==x && curr[1]==y)
+                    return count;
+                for(int[] d:dirs)
+                {
+                    int nr=curr[0]+d[0];
+                    int nc=curr[1]+d[1];
+                    if(visited.contains(getHash(nr,nc)) || (nr<0 && nc<0))
+                        continue;
+                    visited.add(getHash(nr,nc));
+                    q.offer(new int[]{nr,nc});
+                }
+            }
+            count++;
+        }
+        return -1;
+    }
+    public String getHash2(int x, int y)
+    {
+        return x+","+y;
+    }
+
     public static void main(String[] args)
     {
         MinimumKnightMoves obj=new MinimumKnightMoves();
-        System.out.println(obj.minKnightMoves(-35,211));
+        System.out.println(obj.minKnightMoves2(300,0));
     }
 }

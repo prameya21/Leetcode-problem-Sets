@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class ExpressiveWords
 {
     /*
@@ -55,9 +58,12 @@ public class ExpressiveWords
         }
         return i==S.length() && j==str.length();
     }
+
+
     public static void main(String[] args)
     {
         ExpressiveWords obj=new ExpressiveWords();
+        System.out.println(obj.expressiveWords("heeellooo",new String[]{"hello", "hi", "helo"}));
         System.out.println(obj.expressiveWords("heeellooo",new String[]{"hello", "hi", "helo"}));
     }
 }

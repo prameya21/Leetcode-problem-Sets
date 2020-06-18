@@ -151,10 +151,52 @@ public class CheapestFlightWithinKStops
         }
         return -1;
     }
+
+    public int findCheapestPrice1(int n, int[][] flights, int src, int dst, int K)
+    {
+        if(n==0 || flights.length==0)
+            return -1;
+        Map<Integer,List<int[]>> map=new HashMap<>();
+        for(int[] i:flights)
+        {
+            map.putIfAbsent(i[0],new ArrayList<>());
+            map.get(i[0]).add(new int[]{i[1],i[2]});
+        }
+        int[] costs=new int[2];
+        costs[1]=Integer.MAX_VALUE;
+        return dfs(map,src,dst,K+1,costs);
+    }
+
+    public int dfs(Map<Integer,List<int[]>> map, int src, int dst, int k, int[] cost)
+    {
+        if(k<0)
+            return Integer.MAX_VALUE;
+        if(src==dst)
+        {
+            cost[1]=cost[0];
+            return cost[0];
+        }
+        if(!map.containsKey(src))
+            return Integer.MAX_VALUE;
+        int min=Integer.MAX_VALUE;
+        for(int[] i:map.get(src))
+        {
+            if(cost[0]+i[1]>=cost[1])
+                continue;
+            cost[0]+=i[1];
+            int val=dfs(map,i[0],dst,k-1,cost);
+            cost[0]-=i[1];
+            min=Math.min(val,min);
+        }
+        return min;
+    }
+
+
+
     public static void main(String[] args)
     {
         CheapestFlightWithinKStops obj=new CheapestFlightWithinKStops();
         //System.out.print(obj.findCheapestPrice(5,new int[][]{{4,1,1},{1,2,3},{0,3,2},{0,4,10},{3,1,1},{1,4,3}},2,1,1));
-        System.out.print(obj.findCheapestPricedijkstra(3,new int[][]{{0,1,100},{1,2,100},{0,2,500}},0,2,1));
+        System.out.print(obj.findCheapestPrice1(3,new int[][]{{0,1,100},{1,2,100},{0,2,500}},0,2,1));
     }
 }
