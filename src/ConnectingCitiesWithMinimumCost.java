@@ -84,11 +84,52 @@ public class ConnectingCitiesWithMinimumCost
         return visited.size()==N?totalCost:-1;
     }
 
+    public int minimumCostUF(int N, int[][] connections)
+    {
+        if(N==0 || N==1)
+            return 1;
+
+        int n=N;
+        Arrays.sort(connections, new Comparator<int[]>() {
+            public int compare(int[] c1, int[] c2) {
+                return c1[2]-c2[2];
+            }
+        });
+        int[] parent=new int[N+1];
+        for(int i=0;i<parent.length;i++)
+            parent[i]=i;
+
+        int totalCost=0;
+        for(int[] i:connections)
+        {
+            int uRep=find(parent,i[0]);
+            int vRep=find(parent,i[1]);
+            if(uRep!=vRep)
+            {
+                totalCost+=i[2];
+                parent[uRep]=vRep;
+                n--;
+            }
+        }
+        return n==1?totalCost:-1;
+    }
+    public int find(int[] parent, int i)
+    {
+        if(parent[i]!=i)
+            parent[i]=find(parent,parent[i]);
+        return parent[i];
+    }
+
+
+
     public static void main(String[] args)
     {
         ConnectingCitiesWithMinimumCost obj=new ConnectingCitiesWithMinimumCost();
         System.out.println(obj.minimumCost(3,new int[][]{{1,2,5},{1,3,6},{2,3,1}}));
-
         System.out.println(obj.minimumCost(4,new int[][]{{1,2,3},{3,4,4}}));
+
+
+        System.out.println(obj.minimumCostUF(3,new int[][]{{1,2,5},{1,3,6},{2,3,1}}));
+        System.out.println(obj.minimumCostUF(4,new int[][]{{1,2,3},{3,4,4}}));
     }
 }
