@@ -31,10 +31,41 @@ public class JumpGameII
         }
         return jumps;
     }
+
+    public int jump2(int[] nums)
+    {
+        if(nums==null || nums.length==0)
+            return 0;
+        boolean[] visited=new boolean[nums.length];
+        visited[0]=true;
+        Queue<Integer> q=new LinkedList<>();
+        q.offer(0);
+        int ctr=0;
+        while(!q.isEmpty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                int curr=q.poll();
+                if(curr==nums.length-1)
+                    return ctr;
+                for(int idx=1;idx<=nums[curr];idx++)
+                {
+                    if(curr+idx>=nums.length || visited[curr+idx])
+                        continue;
+                    q.offer(curr+idx);
+                    visited[curr+idx]=true;
+                }
+            }
+            ctr++;
+        }
+        return -1;
+    }
     
     public static void main(String[] args)
     {
         JumpGameII obj=new JumpGameII();
         System.out.println(obj.jump(new int[]{2,3,1,1,4}));
+        System.out.println(obj.jump2(new int[]{2,3,1,1,4}));
     }
 }

@@ -30,11 +30,37 @@ public class JumpGame
         }
         return true;
     }
+
+    public boolean canJump2(int[] nums)
+    {
+        if(nums==null || nums.length==0)
+            return false;
+        int[] memo=new int[nums.length];
+        //memo[memo.length-1]=1;
+        return helper(nums,0,memo);
+    }
+
+    public boolean helper(int[] nums, int idx, int[] memo)
+    {
+        if(idx>=nums.length)
+            return false;
+        if(idx==nums.length-1)
+            return true;
+        if(memo[idx]!=0)
+            return memo[idx]==1?true:false;
+        boolean ans=false;
+        for(int i=1;i<=nums[idx];i++)
+            ans|=helper(nums,idx+i,memo);
+        memo[idx]=ans?1:-1;
+        return ans;
+    }
+
     public static void main(String[] args)
     {
         JumpGame obj=new JumpGame();
-        System.out.println(obj.canJump(new int[]{3,2,1,0,4}));
-        System.out.println(obj.canJump(new int[]{2,3,1,1,4}));
+        System.out.println(obj.canJump2(new int[]{3,2,1,0,4}));
+        System.out.println(obj.canJump2(new int[]{2,3,1,1,4}));
+        System.out.println(obj.canJump2(new int[]{2,0,0}));
     }
 }
 
