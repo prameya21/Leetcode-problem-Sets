@@ -55,9 +55,53 @@ public class TaskScheduler
         return timer;
     }
 
+
+    public int leastInterval2(char[] tasks, int n)
+    {
+        if(n==0)
+            return tasks.length;
+        Map<Character,Integer> map=new HashMap<>();
+        for(char c:tasks)
+            map.put(c,map.getOrDefault(c,0)+1);
+
+        PriorityQueue<Character> pq=new PriorityQueue<Character>(new Comparator<>(){
+            public int compare(Character c1, Character c2)
+            {
+                return map.get(c2)-map.get(c1);
+            }
+        });
+        pq.addAll(map.keySet());
+        int ctr=0;
+        while(!pq.isEmpty())
+        {
+            List<Character> temp=new ArrayList<>();
+            for(int i=0;i<=n;i++)
+            {
+                if(!pq.isEmpty())
+                {
+                    char curr=pq.poll();
+                    temp.add(curr);
+                    map.put(curr,map.get(curr)-1);
+                    if(map.get(curr)==0)
+                        map.remove(curr);
+                }
+                ctr++;
+                if(map.isEmpty() && pq.isEmpty())
+                    break;
+            }
+            for(char c:temp)
+            {
+                if(map.containsKey(c))
+                    pq.offer(c);
+            }
+
+        }
+        return ctr;
+    }
+
     public static void main(String[] args)
     {
         TaskScheduler obj=new TaskScheduler();
-        System.out.println(obj.leastInterval(new char[]{'A','A','A','B','B','B'},2));
+        System.out.println(obj.leastInterval2(new char[]{'A','A','A','A','A','A','B','C','D','E','F','G'},2));
     }
 }
