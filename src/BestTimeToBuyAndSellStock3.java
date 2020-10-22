@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class BestTimeToBuyAndSellStock3
 {
     /*
@@ -28,14 +30,40 @@ public class BestTimeToBuyAndSellStock3
      */
     public int maxProfit(int[] prices)
     {
-        return 0;
-        /*
-        Solve later
-        Find Me
-        To Do
-        incomplete
-         */
+        if(prices==null || prices.length==0)
+            return 0;
+        int[] left=new int[prices.length];
+        int[] right=new int[prices.length+1];
+        int leftMin=prices[0];
+        int leftMax=0;
+        for(int i=0;i<prices.length;i++)
+        {
+            left[i]=Math.max(leftMax,prices[i]-leftMin);
+            leftMax=Math.max(leftMax,left[i]);
+            leftMin=Math.min(leftMin,prices[i]);
+        }
+        //System.out.println(Arrays.toString(left));
+        int rightMin=prices[prices.length-1];
+        int rightMax=0;
+        //right[right.length-1]=0;
+        for(int i=prices.length-1;i>=0;i--)
+        {
+            right[i]=Math.max(right[i+1],rightMax-prices[i]);
+            rightMax=Math.max(rightMax,prices[i]);
+        }
+        //System.out.println(Arrays.toString(right));
+        int maxProfit=0;
+        for(int i=0;i<left.length;i++)
+            maxProfit=Math.max(maxProfit,left[i]+right[i+1]);
 
+        return maxProfit;
+    }
+    //7 1 5 3 6 4
+    public static void main(String[] args)
+    {
+        BestTimeToBuyAndSellStock3 obj=new BestTimeToBuyAndSellStock3();
+        System.out.println(obj.maxProfit(new int[]{7,1,5,3,6,4}));
+        System.out.println(obj.maxProfit(new int[]{3,3,5,0,0,3,1,4}));
     }
 }
 

@@ -63,6 +63,6 @@ public class HouseRobber
     {
         HouseRobber obj=new HouseRobber();
         //System.out.println(obj.rob(new int[]{1,2,3,1}));
-        System.out.println(obj.rob(new int[]{2,7,9,3,1}));
+        System.out.println(obj.rob(new int[]{2,1,1,2}));
     }
 }

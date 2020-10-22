@@ -105,7 +105,7 @@ public class NightRoute
         int dist[] = new int[len]; // The output array. dist[i] will hold
         // the shortest distance from src to i
 
-        // sptSet[i] will true if vertex i is included in shortest
+        // sptSet[i] will true if vertex i is included in shortestho
         // path tree or shortest distance from src to i is finalized
         Boolean sptSet[] = new Boolean[len];
 
