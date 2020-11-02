@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.PriorityQueue;
+import java.util.*;
 
 public class ExtractPeaks
 {
@@ -76,6 +73,6 @@ public class ExtractPeaks
     public static void main(String[] args)
     {
         ExtractPeaks obj=new ExtractPeaks();
-        System.out.println(obj.getPeaks(new int[]{2,7,8,5,1,6,3,9,4}));
+        System.out.println(Arrays.toString(obj.getPeaks(new int[]{2,7,8,5,1,6,3,9,4})));
     }
 }
