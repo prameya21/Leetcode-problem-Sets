@@ -18,8 +18,37 @@ public class NumberOfLIS
 
     public int findNumberOfLIS(int[] nums)
     {
-        //todo
-        return 0;
+        int[] dp=new int[nums.length];
+        int[] count=new int[nums.length];
+        int longest=1;
+        count[0]=1;
+        for(int i=0;i<nums.length;i++)
+        {
+            int max=1, c=1;
+            for(int j=0;j<=i;j++)
+            {
+                if(nums[j]<nums[i])
+                {
+                    if(dp[j]>max)
+                    {
+                        max=dp[j];
+                        c=count[j];
+                    }
+                    else if(dp[j]==max)
+                        c+=count[j];
+                }
+                dp[i]=max+1;
+                count[i]=c;
+                longest=Math.max(dp[i],longest);
+            }
+        }
+        int res=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            if(longest==dp[i])
+                res+=count[i];
+        }
+        return res;
     }
 
     public static void main(String[] args)

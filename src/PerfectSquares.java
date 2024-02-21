@@ -35,7 +35,7 @@ public class PerfectSquares
     public int numSquares2(int n)
     {
         if(n<=0)
-        return 0;
+            return 0;
         List<Integer> squares=new ArrayList<>();
         for(int i=1;i<=n;i++)
         {
