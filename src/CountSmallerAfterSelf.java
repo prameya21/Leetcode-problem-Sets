@@ -18,6 +18,7 @@ public class CountSmallerAfterSelf
 
     public List<Integer> countSmaller(int[] nums)
     {
+        //todo
         return null;
     }
 }
