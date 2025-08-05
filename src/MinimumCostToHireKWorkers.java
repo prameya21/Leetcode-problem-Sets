@@ -83,5 +83,7 @@ public class MinimumCostToHireKWorkers
     {
         MinimumCostToHireKWorkers obj=new MinimumCostToHireKWorkers();
         System.out.println(obj.mincostToHireWorkers(new int[]{10,20,5},new int[]{70,50,30},2));
+        //todo
+        //857
     }
 }

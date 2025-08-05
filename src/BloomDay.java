@@ -50,59 +50,38 @@ public class BloomDay
     {
         if(bloomDay==null || bloomDay.length<(m*k))
             return -1;
-
-        int max=getMax(bloomDay);
-        int count=0;
-        int j=0;
-        while(j<=max)
+        int res=-1;
+        int s=0,e=getMax(bloomDay);
+        while(s<=e)
         {
-            int min=getMin(bloomDay);
-            for(int i=0;i<bloomDay.length;i++)
-                if(bloomDay[i]!=0)
-                    bloomDay[i]-=min;
-            count+=min;
-            int adj=getAdj(bloomDay,k);
-            if(adj>=m)
-                return count;
-            j+=min;
-        }
-        return  -1;
-
-    }
-
-    int getAdj(int[] bloomDay, int k)
-    {
-        int count=0;
-        for(int i=0;i<bloomDay.length-k+1;i++)
-        {
-            if(bloomDay[i]==0)
+            int mid=s+(e-s)/2;
+            int val=helper(bloomDay,mid,k);
+            if(val>=m)
             {
-                int j=i, end=i+k;
-                while(j<end)
-                {
-                    if(bloomDay[j]!=0)
-                        break;
-                    j++;
-                }
-                if(j==end)
-                {
-                    count++;
-                    i=j-1;
-                }
+                res=mid;
+                e=mid-1;
             }
+            else
+                s=mid+1;
         }
-        return count;
+        return res;
+
     }
 
-    int getMin(int[] arr)
+    public int helper(int[] arr, int m, int k)
     {
-        int min=Integer.MAX_VALUE;
+        int ctr=0, res=0;
         for(int i:arr)
-            if(i>0)
-                min=Math.min(min,i);
-        return min;
+        {
+            if(i<=m)
+                ctr++;
+            else
+                ctr=0;
+            if(ctr==k)
+                res++;
+        }
+        return res;
     }
-
 
     int getMax(int[] arr)
     {
