@@ -1,6 +1,7 @@
 import java.util.*;
 public class SafestPathInGrid
 {
+    //2812
     /*
         You are given a 0-indexed 2D matrix grid of size n x n, where (r, c) represents:
         A cell containing a thief if grid[r][c] = 1
@@ -80,8 +81,7 @@ public class SafestPathInGrid
             }
         }
 
-        for(int[] i:mat)
-            System.out.println(Arrays.toString(i));
+
 
         int lo=0, hi=0, res=-1;
         for(int[] i:mat)
@@ -136,6 +136,74 @@ public class SafestPathInGrid
     }
 
 
+    public int maximumSafenessFactor2(List<List<Integer>> grid)
+    {
+        if(grid==null || grid.size()==0)
+            return 0;
+        int n=grid.size();
+        int[][] mat=new int[n][n];
+        Queue<int[]> q=new LinkedList<>();
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                if(grid.get(i).get(j)==1)
+                {
+                    mat[i][j] = 0;
+                    q.offer(new int[]{i,j});
+                }
+                else
+                    mat[i][j]=-1;
+            }
+        }
+
+        int[][] dirs={{0,1},{0,-1},{1,0},{-1,0}};
+        while(!q.isEmpty())
+        {
+            int[] curr=q.poll();
+            int val=mat[curr[0]][curr[1]];
+            for(int[] d:dirs)
+            {
+                int r=curr[0]+d[0];
+                int c=curr[1]+d[1];
+                if(r<0 || r>=n || c<0 || c>=n || mat[r][c]!=-1)
+                    continue;
+                mat[r][c]=val+1;
+                q.offer(new int[]{r,c});
+            }
+        }
+
+        for(int[] i:mat)
+            System.out.println(Arrays.toString(i));
+
+        PriorityQueue<int[]> pq=new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o2[2]-o1[2];
+            }
+        });
+        pq.offer(new int[]{0,0,mat[0][0]});
+        mat[0][0]=-1;
+        while(!pq.isEmpty())
+        {
+            int[] curr=pq.poll();
+            int r=curr[0], c=curr[1], val=curr[2];
+            if(r==n-1 && c==n-1)
+                return val;
+            for(int[] d:dirs)
+            {
+                int nr=r+d[0];
+                int nc=c+d[1];
+                if(nr<0 || nr>=n || nc<0 || nc>=n || mat[nr][nc]==-1)
+                    continue;
+                pq.offer(new int[]{nr,nc,Math.min(mat[nr][nc],curr[2])});
+                mat[nr][nc]=-1;
+
+            }
+        }
+        return -1;
+    }
+
 
 
 
@@ -154,5 +222,9 @@ public class SafestPathInGrid
         grid2.add(Arrays.asList(1,1,0));
 
         System.out.println(obj.maximumSafenessFactor(grid2));
+        System.out.println(obj.maximumSafenessFactor(grid));
+
+        System.out.println(obj.maximumSafenessFactor2(grid2));
+        System.out.println(obj.maximumSafenessFactor2(grid));
     }
 }
